@@ -1,0 +1,124 @@
+# =============================================================================
+# Pulsify — Testing Monorepo .gitignore
+# Covers: web-e2e (Playwright/TS), mobile-e2e (Flutter/Patrol), stress-tests (K6)
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# OS & Editor
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/settings.json
+.vscode/.ropeproject
+
+# -----------------------------------------------------------------------------
+# web-e2e — Playwright / TypeScript / ESLint
+# -----------------------------------------------------------------------------
+web-e2e/node_modules/
+web-e2e/dist/
+web-e2e/build/
+
+# Playwright test artifacts
+web-e2e/test-results/
+web-e2e/playwright-report/
+web-e2e/.playwright/
+web-e2e/blob-report/
+
+# TypeScript build output
+web-e2e/*.tsbuildinfo
+
+# Environment secrets
+web-e2e/.env
+web-e2e/.env.*
+!web-e2e/.env.example
+
+# -----------------------------------------------------------------------------
+# mobile-e2e — Flutter / Dart / Patrol
+# -----------------------------------------------------------------------------
+mobile-e2e/.dart_tool/
+mobile-e2e/.flutter-plugins
+mobile-e2e/.flutter-plugins-dependencies
+mobile-e2e/.packages
+mobile-e2e/build/
+mobile-e2e/pubspec.lock
+
+# Patrol test reports
+mobile-e2e/patrol-report/
+
+# Generated Dart files
+mobile-e2e/*.g.dart
+mobile-e2e/**/*.g.dart
+mobile-e2e/*.freezed.dart
+mobile-e2e/**/*.freezed.dart
+
+# Android / iOS build artefacts
+mobile-e2e/android/
+mobile-e2e/ios/
+
+# Coverage
+mobile-e2e/coverage/
+
+# -----------------------------------------------------------------------------
+# stress-tests — K6 / JavaScript
+# -----------------------------------------------------------------------------
+
+# Test run output
+stress-tests/results/
+stress-tests/*.json.out
+stress-tests/summary.json
+
+# Node (if any tooling is added)
+stress-tests/node_modules/
+
+# Environment secrets
+stress-tests/.env
+stress-tests/.env.*
+!stress-tests/.env.example
+
+# -----------------------------------------------------------------------------
+# Common — Secrets & Credentials
+# -----------------------------------------------------------------------------
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+.env
+.env.local
+.env.production
+secrets.json
+credentials.json
+service-account.json
+
+# -----------------------------------------------------------------------------
+# Common — Logs & Reports
+# -----------------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+crash-*.log
+
+# Coverage reports
+coverage/
+lcov.info
+*.lcov
+
+# JUnit XML (generated, not committed)
+junit*.xml
+TEST-*.xml
+
+# -----------------------------------------------------------------------------
+# Common — Temp & Cache
+# -----------------------------------------------------------------------------
+.cache/
+.tmp/
+tmp/
+temp/
+*.tmp

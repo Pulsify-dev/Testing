@@ -1,0 +1,29 @@
+{
+  "name": "pulsify-stress-tests",
+  "version": "1.0.0",
+  "description": "Pulsify K6 stress test suite — /api/login and /api/search",
+  "private": true,
+  "scripts": {
+    "test:smoke":       "k6 run --env STAGE=smoke      --env ENV=staging    scenarios/run-all.js",
+    "test:load":        "k6 run --env STAGE=load       --env ENV=staging    scenarios/run-all.js",
+    "test:stress":      "k6 run --env STAGE=stress     --env ENV=staging    scenarios/run-all.js",
+    "test:spike":       "k6 run --env STAGE=spike      --env ENV=staging    scenarios/run-all.js",
+    "test:soak":        "k6 run --env STAGE=soak       --env ENV=staging    scenarios/run-all.js",
+    "test:breakpoint":  "k6 run --env STAGE=breakpoint --env ENV=staging    scenarios/run-all.js",
+
+    "test:login":       "k6 run --env STAGE=stress --env ENV=staging scenarios/login.stress.js",
+    "test:search":      "k6 run --env STAGE=stress --env ENV=staging scenarios/search.stress.js",
+
+    "test:local":       "k6 run --env STAGE=smoke  --env ENV=local    scenarios/run-all.js",
+    "test:prod":        "k6 run --env STAGE=load   --env ENV=production scenarios/run-all.js",
+
+    "report":           "k6 run --out json=results/summary.json --env STAGE=stress --env ENV=staging scenarios/run-all.js",
+    "report:html":      "k6 run --out web-dashboard --env STAGE=stress --env ENV=staging scenarios/run-all.js"
+  },
+  "devDependencies": {},
+  "engines": {
+    "k6": ">=0.50.0"
+  },
+  "keywords": ["k6", "stress-test", "performance", "pulsify"],
+  "license": "UNLICENSED"
+}

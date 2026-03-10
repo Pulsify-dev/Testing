@@ -1,0 +1,136 @@
+{
+  "$schema": "https://pulsify.dev/schemas/k6-config.json",
+  "version": "1.0.0",
+  "description": "Pulsify K6 stress-test configuration — VU stages, thresholds, and environment settings",
+
+  "environments": {
+    "local": {
+      "baseUrl": "http://localhost:4000",
+      "description": "Local development server"
+    },
+    "staging": {
+      "baseUrl": "https://api.staging.pulsify.dev",
+      "description": "Staging environment (default for stress tests)"
+    },
+    "production": {
+      "baseUrl": "https://api.pulsify.dev",
+      "description": "Production — only run with explicit approval"
+    }
+  },
+
+  "defaultEnvironment": "staging",
+
+  "stages": {
+    "smoke": {
+      "description": "Quick sanity check — 1–2 VUs for a very short duration",
+      "stages": [
+        { "duration": "30s", "target": 2,   "description": "Ramp up to 2 VUs" },
+        { "duration": "1m",  "target": 2,   "description": "Hold at 2 VUs" },
+        { "duration": "10s", "target": 0,   "description": "Ramp down" }
+      ]
+    },
+
+    "load": {
+      "description": "Normal expected load — ramp to typical peak users",
+      "stages": [
+        { "duration": "1m",  "target": 50,  "description": "Ramp up to 50 VUs" },
+        { "duration": "3m",  "target": 50,  "description": "Hold at 50 VUs (steady load)" },
+        { "duration": "30s", "target": 0,   "description": "Ramp down" }
+      ]
+    },
+
+    "stress": {
+      "description": "Ramp to 500 VUs over 1 minute, sustain, then tear down",
+      "stages": [
+        { "duration": "30s", "target": 100, "description": "Warm-up: ramp to 100 VUs" },
+        { "duration": "1m",  "target": 500, "description": "Stress ramp: reach 500 VUs over 1 minute" },
+        { "duration": "2m",  "target": 500, "description": "Sustain: hold 500 VUs" },
+        { "duration": "1m",  "target": 300, "description": "Step down: reduce to 300 VUs" },
+        { "duration": "30s", "target": 0,   "description": "Ramp down: cool off" }
+      ]
+    },
+
+    "spike": {
+      "description": "Sudden traffic spike — 0 to 1000 VUs in 10 seconds",
+      "stages": [
+        { "duration": "10s", "target": 1000, "description": "Instant spike to 1000 VUs" },
+        { "duration": "1m",  "target": 1000, "description": "Hold spike" },
+        { "duration": "10s", "target": 0,    "description": "Drop off" }
+      ]
+    },
+
+    "soak": {
+      "description": "Extended duration at moderate load — detects memory leaks / degradation",
+      "stages": [
+        { "duration": "2m",  "target": 100, "description": "Ramp to 100 VUs" },
+        { "duration": "4h",  "target": 100, "description": "Sustain for 4 hours" },
+        { "duration": "2m",  "target": 0,   "description": "Ramp down" }
+      ]
+    },
+
+    "breakpoint": {
+      "description": "Find the ceiling — keep ramping until something breaks",
+      "stages": [
+        { "duration": "2m",  "target": 100,  "description": "Baseline" },
+        { "duration": "2m",  "target": 200,  "description": "Step 2" },
+        { "duration": "2m",  "target": 400,  "description": "Step 3" },
+        { "duration": "2m",  "target": 800,  "description": "Step 4" },
+        { "duration": "2m",  "target": 1200, "description": "Step 5 — expected failure zone" },
+        { "duration": "2m",  "target": 0,    "description": "Cool down" }
+      ]
+    }
+  },
+
+  "thresholds": {
+    "global": {
+      "http_req_duration": {
+        "p95": "1500ms",
+        "p99": "3000ms",
+        "description": "95th-percentile response time must be under 1.5 s; 99th under 3 s"
+      },
+      "http_req_failed": {
+        "rate": "0.01",
+        "description": "HTTP error rate must stay below 1 %"
+      },
+      "http_reqs": {
+        "description": "Total request throughput counter (informational)"
+      }
+    },
+    "endpoints": {
+      "/api/login": {
+        "http_req_duration{endpoint:login}": {
+          "p95": "800ms",
+          "p99": "2000ms"
+        },
+        "http_req_failed{endpoint:login}": {
+          "rate": "0.005"
+        }
+      },
+      "/api/search": {
+        "http_req_duration{endpoint:search}": {
+          "p95": "1200ms",
+          "p99": "2500ms"
+        },
+        "http_req_failed{endpoint:search}": {
+          "rate": "0.01"
+        }
+      }
+    }
+  },
+
+  "options": {
+    "insecureSkipTLSVerify": false,
+    "noConnectionReuse": false,
+    "userAgent": "Pulsify-K6-StressTest/1.0",
+    "discardResponseBodies": false,
+    "summaryTrendStats": ["avg", "min", "med", "max", "p(75)", "p(90)", "p(95)", "p(99)"],
+    "gracefulRampDown": "30s",
+    "gracefulStop": "30s"
+  },
+
+  "output": {
+    "json": "results/summary.json",
+    "csv": "results/metrics.csv",
+    "htmlReport": "results/report.html"
+  }
+}

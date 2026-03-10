@@ -1,0 +1,73 @@
+# patrol.yaml — Patrol CLI configuration
+# Docs: https://patrol.leancode.co/documentation/patrol-cli
+#
+# Run a specific module:
+#   patrol test --target integration_test/module1_auth/login_test.dart
+#
+# Run all tests:
+#   patrol test
+#
+# Run on a specific device:
+#   patrol test -d emulator-5554
+
+# ---------------------------------------------------------------------------
+# Application under test
+# ---------------------------------------------------------------------------
+app_name: Pulsify
+
+# Android package / iOS bundle ID of the app under test.
+# Override per environment with:  patrol test --package-name com.pulsify.app.staging
+android:
+  package_name: com.pulsify.app
+
+ios:
+  bundle_id: dev.pulsify.app
+
+# ---------------------------------------------------------------------------
+# Test discovery
+# ---------------------------------------------------------------------------
+# Directory that contains integration test files.
+test_file_path: integration_test
+
+# Default test target when no --target flag is provided.
+# Use `**` to run every test under integration_test/.
+test_file_pattern: "**/*_test.dart"
+
+# ---------------------------------------------------------------------------
+# Timeouts
+# ---------------------------------------------------------------------------
+# Maximum time Patrol waits for a widget/native element to appear (seconds).
+find_timeout: 10
+
+# Maximum time a single test is allowed to run (seconds).
+test_timeout: 120
+
+# ---------------------------------------------------------------------------
+# Tags / filtering
+# ---------------------------------------------------------------------------
+# Tests can be tagged with @Tags(['auth']) etc. and filtered via:
+#   patrol test --tags auth
+tags:
+  - auth
+  - playback
+  - smoke
+  - regression
+
+# ---------------------------------------------------------------------------
+# Reporting
+# ---------------------------------------------------------------------------
+# Enable JUnit XML report for CI integration
+junit_report: true
+report_output_dir: patrol-report
+
+# ---------------------------------------------------------------------------
+# Parallel execution
+# ---------------------------------------------------------------------------
+# Run tests concurrently across multiple connected devices.
+# Set to 1 to disable parallelism.
+concurrent_shards: 1
+
+# ---------------------------------------------------------------------------
+# Verbose logging
+# ---------------------------------------------------------------------------
+verbose: false

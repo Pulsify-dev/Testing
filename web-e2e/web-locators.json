@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pulsify.dev/schemas/web-locators.json",
+  "title": "Pulsify Web DOM Locators Registry",
+  "description": "Single source of truth for all frontend DOM selectors used in E2E tests. All Playwright tests MUST reference selectors from this registry. Direct string literals passed to locator() or $() are forbidden by ESLint.",
+  "version": "1.0.0",
+  "modules": {
+    "module1": {
+      "name": "Auth",
+      "description": "Authentication flows: login, registration, password reset, logout",
+      "pages": {
+        "loginPage": {
+          "description": "Main sign-in screen",
+          "url": "/login",
+          "selectors": {
+            "emailInput":            { "selector": "[data-testid='login-email-input']",       "description": "Email / username input field" },
+            "passwordInput":         { "selector": "[data-testid='login-password-input']",    "description": "Password input field" },
+            "submitButton":          { "selector": "[data-testid='login-submit-btn']",        "description": "Sign In submit button" },
+            "forgotPasswordLink":    { "selector": "[data-testid='login-forgot-password']",   "description": "Forgot password anchor link" },
+            "registerLink":          { "selector": "[data-testid='login-register-link']",     "description": "Navigate to registration page" },
+            "errorBanner":           { "selector": "[data-testid='login-error-banner']",      "description": "Inline error message shown on failed login" },
+            "socialLoginGoogle":     { "selector": "[data-testid='login-google-btn']",        "description": "Continue with Google OAuth button" },
+            "socialLoginApple":      { "selector": "[data-testid='login-apple-btn']",         "description": "Continue with Apple OAuth button" },
+            "rememberMeCheckbox":    { "selector": "[data-testid='login-remember-me']",       "description": "Remember me checkbox" },
+            "pageHeading":           { "selector": "[data-testid='login-heading']",           "description": "Page H1 heading" },
+            "loadingSpinner":        { "selector": "[data-testid='login-loading-spinner']",   "description": "Loading indicator shown during auth request" }
+          }
+        },
+        "registerPage": {
+          "description": "New account registration screen",
+          "url": "/register",
+          "selectors": {
+            "fullNameInput":         { "selector": "[data-testid='register-fullname-input']",         "description": "Full name input field" },
+            "usernameInput":         { "selector": "[data-testid='register-username-input']",         "description": "Username input field" },
+            "emailInput":            { "selector": "[data-testid='register-email-input']",            "description": "Email input field" },
+            "passwordInput":         { "selector": "[data-testid='register-password-input']",         "description": "Password input field" },
+            "confirmPasswordInput":  { "selector": "[data-testid='register-confirm-password-input']", "description": "Confirm password input field" },
+            "dobInput":              { "selector": "[data-testid='register-dob-input']",              "description": "Date of birth input" },
+            "termsCheckbox":         { "selector": "[data-testid='register-terms-checkbox']",         "description": "Accept terms & conditions checkbox" },
+            "submitButton":          { "selector": "[data-testid='register-submit-btn']",             "description": "Create Account submit button" },
+            "loginLink":             { "selector": "[data-testid='register-login-link']",             "description": "Already have an account? Sign in link" },
+            "passwordStrengthBar":   { "selector": "[data-testid='register-password-strength']",      "description": "Password strength progress indicator" },
+            "errorBanner":           { "selector": "[data-testid='register-error-banner']",           "description": "Top-level form error banner" },
+            "fieldErrorEmail":       { "selector": "[data-testid='register-field-error-email']",      "description": "Inline validation error under email field" },
+            "fieldErrorPassword":    { "selector": "[data-testid='register-field-error-password']",   "description": "Inline validation error under password field" },
+            "successToast":          { "selector": "[data-testid='register-success-toast']",          "description": "Success toast after account creation" }
+          }
+        },
+        "forgotPasswordPage": {
+          "description": "Password reset request screen",
+          "url": "/forgot-password",
+          "selectors": {
+            "emailInput":            { "selector": "[data-testid='forgot-email-input']",      "description": "Email address input" },
+            "submitButton":          { "selector": "[data-testid='forgot-submit-btn']",       "description": "Send Reset Link button" },
+            "backToLoginLink":       { "selector": "[data-testid='forgot-back-login']",       "description": "Back to login link" },
+            "confirmationMessage":   { "selector": "[data-testid='forgot-confirmation-msg']", "description": "Confirmation message shown after email sent" },
+            "errorBanner":           { "selector": "[data-testid='forgot-error-banner']",     "description": "Error banner (e.g. unknown email)" }
+          }
+        },
+        "resetPasswordPage": {
+          "description": "Password reset form reached via emailed link",
+          "url": "/reset-password",
+          "selectors": {
+            "newPasswordInput":      { "selector": "[data-testid='reset-new-password-input']",     "description": "New password field" },
+            "confirmPasswordInput":  { "selector": "[data-testid='reset-confirm-password-input']", "description": "Confirm new password field" },
+            "submitButton":          { "selector": "[data-testid='reset-submit-btn']",             "description": "Reset Password submit button" },
+            "successMessage":        { "selector": "[data-testid='reset-success-msg']",            "description": "Success confirmation after password reset" },
+            "errorBanner":           { "selector": "[data-testid='reset-error-banner']",           "description": "Error banner (e.g. expired token)" }
+          }
+        },
+        "shared": {
+          "description": "Auth-related elements present across multiple auth pages or in the global nav",
+          "selectors": {
+            "logoutButton":          { "selector": "[data-testid='nav-logout-btn']",          "description": "Sign out button in the navigation bar" },
+            "userAvatarMenu":        { "selector": "[data-testid='nav-user-avatar']",         "description": "User avatar / dropdown trigger in nav" },
+            "userDisplayName":       { "selector": "[data-testid='nav-user-display-name']",   "description": "Logged-in user's display name shown in nav" },
+            "sessionExpiredModal":   { "selector": "[data-testid='session-expired-modal']",   "description": "Modal shown when session expires" },
+            "sessionExpiredConfirm": { "selector": "[data-testid='session-expired-confirm']", "description": "Confirm button inside session-expired modal" }
+          }
+        }
+      }
+    },
+    "module5": {
+      "name": "Playback",
+      "description": "Audio/video playback player, queue management, and track information",
+      "pages": {
+        "playerBar": {
+          "description": "Persistent bottom playback bar visible across all authenticated pages",
+          "selectors": {
+            "playPauseButton":       { "selector": "[data-testid='player-play-pause-btn']",   "description": "Play / Pause toggle button" },
+            "skipNextButton":        { "selector": "[data-testid='player-skip-next-btn']",    "description": "Skip to next track button" },
+            "skipPrevButton":        { "selector": "[data-testid='player-skip-prev-btn']",    "description": "Skip to previous track button" },
+            "progressBar":           { "selector": "[data-testid='player-progress-bar']",     "description": "Seek / progress bar (range input)" },
+            "progressBarFill":       { "selector": "[data-testid='player-progress-fill']",    "description": "Visual fill element of the progress bar" },
+            "currentTimeLabel":      { "selector": "[data-testid='player-current-time']",     "description": "Current playback time label (e.g. 1:23)" },
+            "totalDurationLabel":    { "selector": "[data-testid='player-total-duration']",   "description": "Total track duration label (e.g. 3:45)" },
+            "volumeSlider":          { "selector": "[data-testid='player-volume-slider']",    "description": "Volume level slider (range input)" },
+            "muteButton":            { "selector": "[data-testid='player-mute-btn']",         "description": "Mute / unmute toggle button" },
+            "shuffleButton":         { "selector": "[data-testid='player-shuffle-btn']",      "description": "Shuffle queue toggle button" },
+            "repeatButton":          { "selector": "[data-testid='player-repeat-btn']",       "description": "Repeat mode toggle (off → track → queue)" },
+            "trackTitle":            { "selector": "[data-testid='player-track-title']",      "description": "Currently playing track title" },
+            "trackArtist":           { "selector": "[data-testid='player-track-artist']",     "description": "Currently playing artist name" },
+            "albumArt":              { "selector": "[data-testid='player-album-art']",        "description": "Album artwork thumbnail in player bar" },
+            "likeButton":            { "selector": "[data-testid='player-like-btn']",         "description": "Like / heart the current track" },
+            "addToPlaylistButton":   { "selector": "[data-testid='player-add-to-playlist']",  "description": "Add current track to a playlist" },
+            "expandPlayerButton":    { "selector": "[data-testid='player-expand-btn']",       "description": "Expand to full-screen player view" },
+            "queueButton":           { "selector": "[data-testid='player-queue-btn']",        "description": "Open the playback queue panel" }
+          }
+        },
+        "fullscreenPlayer": {
+          "description": "Expanded / full-screen player view",
+          "url": "/player",
+          "selectors": {
+            "albumArtLarge":         { "selector": "[data-testid='fullplayer-album-art']",        "description": "Large album artwork" },
+            "trackTitle":            { "selector": "[data-testid='fullplayer-track-title']",      "description": "Track title in full-screen view" },
+            "trackArtist":           { "selector": "[data-testid='fullplayer-track-artist']",     "description": "Artist name in full-screen view" },
+            "albumName":             { "selector": "[data-testid='fullplayer-album-name']",       "description": "Album name in full-screen view" },
+            "lyricsPanel":           { "selector": "[data-testid='fullplayer-lyrics-panel']",     "description": "Scrollable lyrics panel" },
+            "lyricsLine":            { "selector": "[data-testid='fullplayer-lyrics-line']",      "description": "Individual lyric line element" },
+            "lyricsActiveLine":      { "selector": "[data-testid='fullplayer-lyrics-active']",    "description": "Currently active (highlighted) lyric line" },
+            "closeButton":           { "selector": "[data-testid='fullplayer-close-btn']",        "description": "Collapse back to mini player bar" },
+            "shareButton":           { "selector": "[data-testid='fullplayer-share-btn']",        "description": "Share current track button" },
+            "moreOptionsButton":     { "selector": "[data-testid='fullplayer-more-options-btn']", "description": "More options (kebab) menu button" }
+          }
+        },
+        "queuePanel": {
+          "description": "Playback queue / up-next sidebar panel",
+          "selectors": {
+            "queuePanel":            { "selector": "[data-testid='queue-panel']",             "description": "Queue sidebar panel container" },
+            "queueCloseButton":      { "selector": "[data-testid='queue-close-btn']",         "description": "Close the queue panel" },
+            "queueHeading":          { "selector": "[data-testid='queue-heading']",           "description": "\"Up Next\" heading inside queue panel" },
+            "queueItems":            { "selector": "[data-testid='queue-item']",              "description": "Individual track rows inside the queue (multi-match)" },
+            "queueItemTitle":        { "selector": "[data-testid='queue-item-title']",        "description": "Track title inside a queue row" },
+            "queueItemArtist":       { "selector": "[data-testid='queue-item-artist']",       "description": "Artist name inside a queue row" },
+            "queueItemRemoveBtn":    { "selector": "[data-testid='queue-item-remove-btn']",   "description": "Remove track from queue button" },
+            "clearQueueButton":      { "selector": "[data-testid='queue-clear-btn']",         "description": "Clear entire queue button" },
+            "nowPlayingLabel":       { "selector": "[data-testid='queue-now-playing-label']", "description": "\"Now Playing\" label above current track" }
+          }
+        },
+        "trackContextMenu": {
+          "description": "Right-click / three-dot context menu for track actions",
+          "selectors": {
+            "contextMenu":           { "selector": "[data-testid='track-context-menu']",               "description": "Context menu container" },
+            "addToQueue":            { "selector": "[data-testid='context-add-to-queue']",             "description": "Add to Queue option" },
+            "addToPlaylist":         { "selector": "[data-testid='context-add-to-playlist']",          "description": "Add to Playlist option" },
+            "goToAlbum":             { "selector": "[data-testid='context-go-to-album']",              "description": "Go to Album option" },
+            "goToArtist":            { "selector": "[data-testid='context-go-to-artist']",             "description": "Go to Artist option" },
+            "shareTrack":            { "selector": "[data-testid='context-share-track']",              "description": "Share option" },
+            "removeFromPlaylist":    { "selector": "[data-testid='context-remove-from-playlist']",     "description": "Remove from Playlist option (playlist view only)" }
+          }
+        }
+      }
+    }
+  }
+}

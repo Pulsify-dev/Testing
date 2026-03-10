@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pulsify.dev/schemas/mobile-locators.json",
+  "title": "Pulsify Mobile Widget Key Registry",
+  "description": "Single source of truth for all Flutter widget keys used in Patrol E2E tests. All patrol $ finders MUST reference keys from this registry. Hardcoded key strings inside test files are forbidden by analysis_options.yaml custom lints.",
+  "version": "1.0.0",
+  "keyNamingConvention": "kebab-case. Mirrors the ValueKey passed to the widget in the app source, e.g. Key('login-email-field').",
+  "finderUsage": "In Dart: final key = MobileLocators.module1.loginPage.emailField; $(Key(key)).tap();",
+  "modules": {
+    "module1": {
+      "name": "Auth",
+      "description": "Authentication screens: login, registration, password reset, logout",
+      "screens": {
+        "loginScreen": {
+          "description": "Main sign-in screen",
+          "route": "/login",
+          "keys": {
+            "emailField":           { "key": "login-email-field",           "widgetType": "TextField",    "description": "Email / username input" },
+            "passwordField":        { "key": "login-password-field",        "widgetType": "TextField",    "description": "Password input" },
+            "submitButton":         { "key": "login-submit-button",         "widgetType": "ElevatedButton","description": "Sign In button" },
+            "forgotPasswordLink":   { "key": "login-forgot-password-link",  "widgetType": "TextButton",   "description": "Forgot password tap target" },
+            "registerLink":         { "key": "login-register-link",         "widgetType": "TextButton",   "description": "Navigate to register screen" },
+            "errorBanner":          { "key": "login-error-banner",          "widgetType": "SnackBar",     "description": "Error message shown on failed login" },
+            "googleSignInButton":   { "key": "login-google-signin-button",  "widgetType": "OutlinedButton","description": "Continue with Google" },
+            "appleSignInButton":    { "key": "login-apple-signin-button",   "widgetType": "OutlinedButton","description": "Continue with Apple" },
+            "rememberMeSwitch":     { "key": "login-remember-me-switch",    "widgetType": "Switch",       "description": "Remember me toggle" },
+            "loadingIndicator":     { "key": "login-loading-indicator",     "widgetType": "CircularProgressIndicator", "description": "Loading spinner during auth request" }
+          }
+        },
+        "registerScreen": {
+          "description": "New account registration screen",
+          "route": "/register",
+          "keys": {
+            "fullNameField":        { "key": "register-full-name-field",         "widgetType": "TextField",    "description": "Full name input" },
+            "usernameField":        { "key": "register-username-field",          "widgetType": "TextField",    "description": "Username input" },
+            "emailField":           { "key": "register-email-field",             "widgetType": "TextField",    "description": "Email input" },
+            "passwordField":        { "key": "register-password-field",          "widgetType": "TextField",    "description": "Password input" },
+            "confirmPasswordField": { "key": "register-confirm-password-field",  "widgetType": "TextField",    "description": "Confirm password input" },
+            "dobField":             { "key": "register-dob-field",               "widgetType": "TextField",    "description": "Date of birth input" },
+            "termsCheckbox":        { "key": "register-terms-checkbox",          "widgetType": "Checkbox",     "description": "Accept terms & conditions" },
+            "submitButton":         { "key": "register-submit-button",           "widgetType": "ElevatedButton","description": "Create Account button" },
+            "loginLink":            { "key": "register-login-link",              "widgetType": "TextButton",   "description": "Already have an account? Sign in" },
+            "passwordStrengthBar":  { "key": "register-password-strength-bar",   "widgetType": "LinearProgressIndicator", "description": "Password strength indicator" },
+            "errorBanner":          { "key": "register-error-banner",            "widgetType": "SnackBar",     "description": "Top-level form error" },
+            "successSnackbar":      { "key": "register-success-snackbar",        "widgetType": "SnackBar",     "description": "Success message after registration" }
+          }
+        },
+        "forgotPasswordScreen": {
+          "description": "Password reset request screen",
+          "route": "/forgot-password",
+          "keys": {
+            "emailField":           { "key": "forgot-email-field",           "widgetType": "TextField",     "description": "Email address input" },
+            "submitButton":         { "key": "forgot-submit-button",         "widgetType": "ElevatedButton","description": "Send Reset Link button" },
+            "backButton":           { "key": "forgot-back-button",           "widgetType": "IconButton",    "description": "Back to login" },
+            "confirmationText":     { "key": "forgot-confirmation-text",     "widgetType": "Text",          "description": "Confirmation message after email sent" },
+            "errorBanner":          { "key": "forgot-error-banner",          "widgetType": "SnackBar",      "description": "Error snackbar (unknown email)" }
+          }
+        },
+        "resetPasswordScreen": {
+          "description": "Password reset form (deep-linked from email)",
+          "route": "/reset-password",
+          "keys": {
+            "newPasswordField":     { "key": "reset-new-password-field",     "widgetType": "TextField",     "description": "New password input" },
+            "confirmPasswordField": { "key": "reset-confirm-password-field", "widgetType": "TextField",     "description": "Confirm new password input" },
+            "submitButton":         { "key": "reset-submit-button",          "widgetType": "ElevatedButton","description": "Reset Password button" },
+            "successText":          { "key": "reset-success-text",           "widgetType": "Text",          "description": "Confirmation after successful reset" },
+            "errorBanner":          { "key": "reset-error-banner",           "widgetType": "SnackBar",      "description": "Error (expired / invalid token)" }
+          }
+        },
+        "shared": {
+          "description": "Auth-related widgets visible across multiple screens or in the app shell",
+          "keys": {
+            "userAvatarButton":     { "key": "nav-user-avatar-button",       "widgetType": "GestureDetector","description": "User avatar / profile menu trigger" },
+            "logoutMenuItem":       { "key": "nav-logout-menu-item",         "widgetType": "ListTile",      "description": "Logout option in profile drawer/menu" },
+            "sessionExpiredDialog": { "key": "session-expired-dialog",       "widgetType": "AlertDialog",   "description": "Dialog shown when session expires" },
+            "sessionExpiredOkBtn":  { "key": "session-expired-ok-button",    "widgetType": "TextButton",    "description": "OK / re-login button inside session dialog" }
+          }
+        }
+      }
+    },
+    "module5": {
+      "name": "Playback",
+      "description": "Audio playback player, queue management, and track information",
+      "screens": {
+        "miniPlayer": {
+          "description": "Persistent bottom mini-player visible across authenticated screens",
+          "keys": {
+            "playPauseButton":      { "key": "mini-player-play-pause-button",  "widgetType": "IconButton",  "description": "Play / Pause toggle" },
+            "skipNextButton":       { "key": "mini-player-skip-next-button",   "widgetType": "IconButton",  "description": "Skip to next track" },
+            "skipPrevButton":       { "key": "mini-player-skip-prev-button",   "widgetType": "IconButton",  "description": "Skip to previous track" },
+            "trackTitle":           { "key": "mini-player-track-title",        "widgetType": "Text",        "description": "Currently playing track title" },
+            "trackArtist":          { "key": "mini-player-track-artist",       "widgetType": "Text",        "description": "Currently playing artist name" },
+            "albumArt":             { "key": "mini-player-album-art",          "widgetType": "Image",       "description": "Album artwork thumbnail" },
+            "progressBar":          { "key": "mini-player-progress-bar",       "widgetType": "Slider",      "description": "Seek / progress slider" },
+            "expandButton":         { "key": "mini-player-expand-button",      "widgetType": "IconButton",  "description": "Expand to full-screen player" },
+            "likeButton":           { "key": "mini-player-like-button",        "widgetType": "IconButton",  "description": "Like / heart current track" }
+          }
+        },
+        "fullscreenPlayer": {
+          "description": "Full-screen player sheet / screen",
+          "route": "/player",
+          "keys": {
+            "albumArtLarge":        { "key": "fullplayer-album-art",           "widgetType": "Image",       "description": "Large album artwork" },
+            "trackTitle":           { "key": "fullplayer-track-title",         "widgetType": "Text",        "description": "Track title" },
+            "trackArtist":          { "key": "fullplayer-track-artist",        "widgetType": "Text",        "description": "Artist name" },
+            "albumName":            { "key": "fullplayer-album-name",          "widgetType": "Text",        "description": "Album name" },
+            "playPauseButton":      { "key": "fullplayer-play-pause-button",   "widgetType": "IconButton",  "description": "Play / Pause toggle" },
+            "skipNextButton":       { "key": "fullplayer-skip-next-button",    "widgetType": "IconButton",  "description": "Skip to next" },
+            "skipPrevButton":       { "key": "fullplayer-skip-prev-button",    "widgetType": "IconButton",  "description": "Skip to previous" },
+            "progressSlider":       { "key": "fullplayer-progress-slider",     "widgetType": "Slider",      "description": "Seek slider" },
+            "currentTimeLabel":     { "key": "fullplayer-current-time",        "widgetType": "Text",        "description": "Elapsed time label" },
+            "totalDurationLabel":   { "key": "fullplayer-total-duration",      "widgetType": "Text",        "description": "Total duration label" },
+            "volumeSlider":         { "key": "fullplayer-volume-slider",       "widgetType": "Slider",      "description": "Volume slider" },
+            "shuffleButton":        { "key": "fullplayer-shuffle-button",      "widgetType": "IconButton",  "description": "Shuffle toggle" },
+            "repeatButton":         { "key": "fullplayer-repeat-button",       "widgetType": "IconButton",  "description": "Repeat mode toggle" },
+            "lyricsButton":         { "key": "fullplayer-lyrics-button",       "widgetType": "IconButton",  "description": "Toggle lyrics panel" },
+            "lyricsPanel":          { "key": "fullplayer-lyrics-panel",        "widgetType": "Container",   "description": "Scrollable lyrics container" },
+            "queueButton":          { "key": "fullplayer-queue-button",        "widgetType": "IconButton",  "description": "Open queue sheet" },
+            "shareButton":          { "key": "fullplayer-share-button",        "widgetType": "IconButton",  "description": "Share current track" },
+            "closeButton":          { "key": "fullplayer-close-button",        "widgetType": "IconButton",  "description": "Collapse back to mini-player" }
+          }
+        },
+        "queueSheet": {
+          "description": "Bottom sheet showing the playback queue",
+          "keys": {
+            "queueSheet":           { "key": "queue-bottom-sheet",             "widgetType": "DraggableScrollableSheet", "description": "Queue bottom sheet container" },
+            "queueHeading":         { "key": "queue-heading",                  "widgetType": "Text",        "description": "Up Next heading" },
+            "queueList":            { "key": "queue-list",                     "widgetType": "ListView",    "description": "Scrollable list of queued tracks" },
+            "queueItemTile":        { "key": "queue-item-tile",                "widgetType": "ListTile",    "description": "Individual queued track tile (use index suffix at runtime)" },
+            "queueItemRemoveBtn":   { "key": "queue-item-remove-button",       "widgetType": "IconButton",  "description": "Remove track from queue" },
+            "clearQueueButton":     { "key": "queue-clear-button",             "widgetType": "TextButton",  "description": "Clear entire queue" },
+            "nowPlayingLabel":      { "key": "queue-now-playing-label",        "widgetType": "Text",        "description": "Now Playing label above current track" }
+          }
+        },
+        "trackContextMenu": {
+          "description": "Bottom sheet context menu for a track item",
+          "keys": {
+            "contextSheet":         { "key": "track-context-sheet",            "widgetType": "BottomSheet", "description": "Track context menu sheet" },
+            "addToQueue":           { "key": "track-context-add-to-queue",     "widgetType": "ListTile",    "description": "Add to Queue option" },
+            "addToPlaylist":        { "key": "track-context-add-to-playlist",  "widgetType": "ListTile",    "description": "Add to Playlist option" },
+            "goToAlbum":            { "key": "track-context-go-to-album",      "widgetType": "ListTile",    "description": "Go to Album option" },
+            "goToArtist":           { "key": "track-context-go-to-artist",     "widgetType": "ListTile",    "description": "Go to Artist option" },
+            "shareTrack":           { "key": "track-context-share",            "widgetType": "ListTile",    "description": "Share option" }
+          }
+        }
+      }
+    }
+  }
+}
