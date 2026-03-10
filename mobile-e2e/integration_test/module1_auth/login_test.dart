@@ -15,33 +15,29 @@ final _l = MobileLocators.auth.loginScreen;
 
 void main() {
   group('Login Screen @auth', () {
-    patrolTest(
-      'renders all required login fields',
-      tags: ['auth', 'smoke'],
-      ($) async {
-        await $.pumpWidgetAndSettle(const _AppUnderTest());
+    patrolTest('renders all required login fields', tags: ['auth', 'smoke'], (
+      $,
+    ) async {
+      await $.pumpWidgetAndSettle(const _AppUnderTest());
 
-        await $(_l.emailField).waitUntilVisible();
-        await $(_l.passwordField).waitUntilVisible();
-        await $(_l.submitButton).waitUntilVisible();
-        await $(_l.forgotPasswordLink).waitUntilVisible();
-        await $(_l.registerLink).waitUntilVisible();
-      },
-    );
+      await $(_l.emailField).waitUntilVisible();
+      await $(_l.passwordField).waitUntilVisible();
+      await $(_l.submitButton).waitUntilVisible();
+      await $(_l.forgotPasswordLink).waitUntilVisible();
+      await $(_l.registerLink).waitUntilVisible();
+    });
 
-    patrolTest(
-      'shows error banner on invalid credentials',
-      tags: ['auth'],
-      ($) async {
-        await $.pumpWidgetAndSettle(const _AppUnderTest());
+    patrolTest('shows error banner on invalid credentials', tags: ['auth'], (
+      $,
+    ) async {
+      await $.pumpWidgetAndSettle(const _AppUnderTest());
 
-        await $(Key(_l.emailField)).enterText('notauser@example.com');
-        await $(Key(_l.passwordField)).enterText('wrongpassword');
-        await $(Key(_l.submitButton)).tap();
+      await $(Key(_l.emailField)).enterText('notauser@example.com');
+      await $(Key(_l.passwordField)).enterText('wrongpassword');
+      await $(Key(_l.submitButton)).tap();
 
-        await $(Key(_l.errorBanner)).waitUntilVisible();
-      },
-    );
+      await $(Key(_l.errorBanner)).waitUntilVisible();
+    });
 
     patrolTest(
       'navigates to registration screen via register link',
@@ -51,23 +47,23 @@ void main() {
 
         await $(Key(_l.registerLink)).tap();
 
-        await $(Key(MobileLocators.auth.registerScreen.submitButton))
-            .waitUntilVisible();
+        await $(
+          Key(MobileLocators.auth.registerScreen.submitButton),
+        ).waitUntilVisible();
       },
     );
 
-    patrolTest(
-      'navigates to forgot-password screen',
-      tags: ['auth'],
-      ($) async {
-        await $.pumpWidgetAndSettle(const _AppUnderTest());
+    patrolTest('navigates to forgot-password screen', tags: ['auth'], (
+      $,
+    ) async {
+      await $.pumpWidgetAndSettle(const _AppUnderTest());
 
-        await $(Key(_l.forgotPasswordLink)).tap();
+      await $(Key(_l.forgotPasswordLink)).tap();
 
-        await $(Key(MobileLocators.auth.forgotPasswordScreen.submitButton))
-            .waitUntilVisible();
-      },
-    );
+      await $(
+        Key(MobileLocators.auth.forgotPasswordScreen.submitButton),
+      ).waitUntilVisible();
+    });
 
     patrolTest(
       'shows loading indicator during authentication request',
@@ -91,18 +87,23 @@ void main() {
         await $.pumpWidgetAndSettle(const _AppUnderTest());
 
         await $(Key(_l.emailField)).enterText(
-          const String.fromEnvironment('TEST_USER_EMAIL',
-              defaultValue: 'test@pulsify.dev'),
+          const String.fromEnvironment(
+            'TEST_USER_EMAIL',
+            defaultValue: 'test@pulsify.dev',
+          ),
         );
         await $(Key(_l.passwordField)).enterText(
-          const String.fromEnvironment('TEST_USER_PASSWORD',
-              defaultValue: 'Test@1234'),
+          const String.fromEnvironment(
+            'TEST_USER_PASSWORD',
+            defaultValue: 'Test@1234',
+          ),
         );
         await $(Key(_l.submitButton)).tap();
 
         // After login the mini-player shell (and user avatar) should be visible
-        await $(Key(MobileLocators.auth.shared.userAvatarButton))
-            .waitUntilVisible();
+        await $(
+          Key(MobileLocators.auth.shared.userAvatarButton),
+        ).waitUntilVisible();
       },
     );
   });
@@ -118,8 +119,6 @@ class _AppUnderTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const MaterialApp(
-        home: Scaffold(
-          body: Center(child: Text('App under test — replace me')),
-        ),
-      );
+    home: Scaffold(body: Center(child: Text('App under test — replace me'))),
+  );
 }

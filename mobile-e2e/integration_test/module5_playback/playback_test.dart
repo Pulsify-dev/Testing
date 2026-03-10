@@ -11,9 +11,9 @@ import 'package:patrol/patrol.dart';
 import '../../lib/locators/locators.dart';
 
 // Shorthand aliases
-final _mini   = MobileLocators.playback.miniPlayer;
-final _full   = MobileLocators.playback.fullscreenPlayer;
-final _queue  = MobileLocators.playback.queueSheet;
+final _mini = MobileLocators.playback.miniPlayer;
+final _full = MobileLocators.playback.fullscreenPlayer;
+final _queue = MobileLocators.playback.queueSheet;
 
 void main() {
   group('Mini Player @playback', () {
@@ -49,24 +49,20 @@ void main() {
       },
     );
 
-    patrolTest(
-      'skip next advances to a different track',
-      tags: ['playback'],
-      ($) async {
-        await $.pumpWidgetAndSettle(const _AppUnderTest());
+    patrolTest('skip next advances to a different track', tags: ['playback'], (
+      $,
+    ) async {
+      await $.pumpWidgetAndSettle(const _AppUnderTest());
 
-        final titleBefore =
-            await $(Key(_mini.trackTitle)).text;
+      final titleBefore = await $(Key(_mini.trackTitle)).text;
 
-        await $(Key(_mini.skipNextButton)).tap();
-        await $.pumpAndSettle();
+      await $(Key(_mini.skipNextButton)).tap();
+      await $.pumpAndSettle();
 
-        final titleAfter =
-            await $(Key(_mini.trackTitle)).text;
+      final titleAfter = await $(Key(_mini.trackTitle)).text;
 
-        expect(titleAfter, isNot(equals(titleBefore)));
-      },
-    );
+      expect(titleAfter, isNot(equals(titleBefore)));
+    });
 
     patrolTest(
       'tapping expand opens the full-screen player',
@@ -160,8 +156,9 @@ void main() {
         await $(Key(_full.queueButton)).tap();
         await $(Key(_queue.queueSheet)).waitUntilVisible();
 
-        final firstItemRemove =
-            Key(MobileLocators.playback.queueSheet.itemAt(0));
+        final firstItemRemove = Key(
+          MobileLocators.playback.queueSheet.itemAt(0),
+        );
         await $(firstItemRemove).scrollTo();
         await $(firstItemRemove).tap();
 
@@ -170,23 +167,23 @@ void main() {
       },
     );
 
-    patrolTest(
-      'clear queue button empties the queue',
-      tags: ['playback'],
-      ($) async {
-        await $.pumpWidgetAndSettle(const _AppUnderTest());
+    patrolTest('clear queue button empties the queue', tags: ['playback'], (
+      $,
+    ) async {
+      await $.pumpWidgetAndSettle(const _AppUnderTest());
 
-        await $(Key(_mini.expandButton)).tap();
-        await $(Key(_full.queueButton)).tap();
-        await $(Key(_queue.queueSheet)).waitUntilVisible();
+      await $(Key(_mini.expandButton)).tap();
+      await $(Key(_full.queueButton)).tap();
+      await $(Key(_queue.queueSheet)).waitUntilVisible();
 
-        await $(Key(_queue.clearQueueButton)).tap();
+      await $(Key(_queue.clearQueueButton)).tap();
 
-        // After clearing, the first queue item should not be visible
-        expect($(Key(MobileLocators.playback.queueSheet.itemAt(0))).visible,
-            isFalse);
-      },
-    );
+      // After clearing, the first queue item should not be visible
+      expect(
+        $(Key(MobileLocators.playback.queueSheet.itemAt(0))).visible,
+        isFalse,
+      );
+    });
   });
 }
 
@@ -198,8 +195,6 @@ class _AppUnderTest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const MaterialApp(
-        home: Scaffold(
-          body: Center(child: Text('App under test — replace me')),
-        ),
-      );
+    home: Scaffold(body: Center(child: Text('App under test — replace me'))),
+  );
 }
