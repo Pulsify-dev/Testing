@@ -5,7 +5,7 @@ End-to-end, mobile integration, and performance stress tests for the **Pulsify**
 | Pillar | Tool | Scope |
 |---|---|---|
 | [`web-e2e/`](#web-e2e) | Playwright + TypeScript | Browser E2E — Module 1 (Auth) · Module 5 (Playback) |
-| [`mobile-e2e/`](#mobile-e2e) | Flutter + Patrol | Android / iOS integration tests |
+| [`mobile-e2e/`](#mobile-e2e) | Appium + WebdriverIO + TS | Android integration tests |
 | [`stress-tests/`](#stress-tests) | K6 | HTTP load, stress, and spike testing |
 
 ---
@@ -26,17 +26,16 @@ Testing/
 │   ├── .eslintrc.js
 │   └── package.json
 │
-├── mobile-e2e/                     # Flutter / Patrol mobile integration suite
-│   ├── integration_test/
-│   │   ├── module1_auth/           # Auth Patrol tests
-│   │   └── module5_playback/       # Playback Patrol tests
-│   ├── lib/locators/
-│   │   └── locators.dart           # Typed Dart constants for widget keys
-│   ├── test_driver/
-│   │   └── patrol_test_driver.dart
-│   ├── mobile-locators.json        # Single source of truth for widget keys
-│   ├── analysis_options.yaml
-│   └── pubspec.yaml
+├── mobile-e2e/                     # Appium / WebdriverIO integration suite
+│   ├── test/
+│   │   ├── specs/                  # Test specifications
+│   │   │   ├── module1-auth/       # Auth Appium tests
+│   │   │   └── module5-playback/   # Playback Appium tests
+│   │   └── locators.ts             # Typed accessor over mobile-locators.json
+│   ├── mobile-locators.json        # Single source of truth for element selectors/accessibility IDs
+│   ├── wdio.conf.ts                # WebdriverIO configuration
+│   ├── tsconfig.json
+│   └── package.json
 │
 ├── stress-tests/                   # K6 performance / stress test suite
 │   ├── lib/
@@ -123,39 +122,40 @@ await page.locator(Playback.playerBar.playPauseButton).click();
 
 ### Prerequisites
 
-- Flutter SDK ≥ 3.19
-- Patrol CLI: `dart pub global activate patrol_cli`
-- Android: connected device / emulator with `com.pulsify.app` installed
-- iOS: connected device / simulator with `dev.pulsify.app` installed
+- Node.js ≥ 20
+- Android Studio & Emulator running (with `com.pulsify.app` APK available)
+- Appium Server & UiAutomator2 driver (`npm install -g appium`, `appium driver install uiautomator2`)
+- `npm install` inside `mobile-e2e/`
 
 ### Setup
 
 ```bash
 cd mobile-e2e
-flutter pub get
+npm install
 ```
 
 ### Running Tests
 
 ```bash
-# Android
-patrol test --target integration_test/module1_auth/login_test.dart
+# Ensure Appium server is running in a separate terminal:
+# appium
 
-# iOS
-patrol test --target integration_test/module5_playback/playback_test.dart --platform ios
+# Run all tests
+npm test
 
-# All tests (Android)
-patrol test
+# Run specific module specs
+npx wdio run wdio.conf.ts --suite auth
+npx wdio run wdio.conf.ts --suite playback
 ```
 
 ### Locator Registry
 
-All Flutter widget keys live in [`mobile-e2e/mobile-locators.json`](mobile-e2e/mobile-locators.json). Import via Dart:
+All element selectors (Accessibility IDs, XPaths) live in [`mobile-e2e/mobile-locators.json`](mobile-e2e/mobile-locators.json). Import via TypeScript:
 
-```dart
-import 'package:mobile_e2e/locators/locators.dart';
+```ts
+import { Auth } from '../test/locators';
 
-await $(Key(MobileLocators.auth.loginScreen.emailField)).enterText('user@example.com');
+await $(Auth.loginScreen.emailField).setValue('user@example.com');
 ```
 
 ---
@@ -241,4 +241,4 @@ Per-endpoint:
 1. **Selectors/keys** — never hardcode. Add to `web-locators.json` or `mobile-locators.json` first.
 2. **Web tests** — must pass `npm run lint` before merge. The `no-hardcoded-selectors` rule is enforced in CI.
 3. **K6 scenarios** — new endpoints get a new file in `scenarios/` and payload factory in `lib/payloads.js`.
-4. **Tags** — web specs use `@tag` annotations; mobile tests use `addTags(['tag'])`.
+4. **Tags** — web specs use `@tag` annotations; mobile tests use WebdriverIO suites or `@tag` mocha grep strings.
