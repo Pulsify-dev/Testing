@@ -122,3 +122,36 @@ TEST-*.xml
 tmp/
 temp/
 *.tmp
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# -----------------------------------------------------------------------------
+# e2e — Black-box Playwright Tests (JavaScript)
+# -----------------------------------------------------------------------------
+
+# Playwright run artifacts (generated per test run, never commit these)
+e2e/test-results/
+e2e/playwright-report/
+e2e/blob-report/
+
+# Playwright trace files (binary, too large to commit)
+e2e/**/*.zip
+e2e/**/trace/
+
+# Screenshots & videos captured on test failure
+e2e/**/screenshots/
+e2e/**/videos/
+
+# Node dependencies (if e2e gets its own package.json)
+e2e/node_modules/
+
+# Environment secrets specific to e2e
+e2e/.env
+e2e/.env.*
+!e2e/.env.example
