@@ -61,7 +61,8 @@ exports.config = {
         "appium:automationName": "UiAutomator2",
         "appium:appPackage": "com.soundcloud.android",
         "appium:appActivity": "com.soundcloud.android.launcher.LauncherActivity",
-        "appium:noReset": true
+        "appium:noReset": true,
+        "appium:autoGrantPermissions": true
     }],
 
     //
