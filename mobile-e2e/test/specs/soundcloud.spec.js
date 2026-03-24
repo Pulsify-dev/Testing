@@ -44,11 +44,11 @@ describe('SoundCloud Production App - Modules 1, 2 & 3 E2E Tests', () => {
                 // 2. Tap "Continue" to transition to the actual Login/Password screen
                 const continueBtn = await $('//*[@text="Continue"]');
                 await continueBtn.click();
-                
+
                 await browser.pause(2000);
 
                 // 3. Now the "Forgot your password?" element should be visible on the Login screen. Broadening the XPath in case it says "Forgot password?"
-                const forgotPasswordBtn = await $('//*[contains(@text, "Forgot") or contains(@text, "forgot") or contains(@content-desc, "Forgot")]'); 
+                const forgotPasswordBtn = await $('//*[contains(@text, "Forgot") or contains(@text, "forgot") or contains(@content-desc, "Forgot")]');
                 await forgotPasswordBtn.waitForDisplayed({ timeout: 10000 });
                 await forgotPasswordBtn.click();
 
@@ -65,7 +65,7 @@ describe('SoundCloud Production App - Modules 1, 2 & 3 E2E Tests', () => {
                 await browser.back();
                 await browser.back();
                 // Adding a pause so the animation finishes before the next test
-                await browser.pause(2000); 
+                await browser.pause(2000);
             }
         });
 
@@ -93,13 +93,13 @@ describe('SoundCloud Production App - Modules 1, 2 & 3 E2E Tests', () => {
             // 3. "Choose a password" page appears (Sequential flow)
             // Hard wait to prevent race condition with the previous page's EditText
             await browser.pause(2000);
-            
+
             const pwdTitle = await $('//*[@text="Choose a password"]');
             await pwdTitle.waitForDisplayed({ timeout: 10000 });
 
             const passwordInput = await $('//android.widget.EditText');
             await passwordInput.setValue('TestAppium123!');
-            
+
             // Hit continue on the password page
             const pwdContinueBtn = await $('//*[@text="Continue"]');
             await pwdContinueBtn.click();
@@ -108,7 +108,7 @@ describe('SoundCloud Production App - Modules 1, 2 & 3 E2E Tests', () => {
             await browser.pause(2000);
             const onboardingTitle = await $('//*[@text="Tell us more about you"]');
             await onboardingTitle.waitForDisplayed({ timeout: 7000 });
-            
+
             const displayNameInput = await $('//android.widget.EditText'); // "Loles21" goes here
             const monthDropdown = await $('//*[@text="Month"]');
             const dayDropdown = await $('//*[@text="Day"]');
