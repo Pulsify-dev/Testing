@@ -122,3 +122,15 @@ TEST-*.xml
 tmp/
 temp/
 *.tmp
+
+# -----------------------------------------------------------------------------
+# Node Modules & WebdriverIO
+# -----------------------------------------------------------------------------
+node_modules/
+mobile-e2e/node_modules/
+mobile-e2e/package-lock.json
+mobile-e2e/allure-results/
+mobile-e2e/allure-report/
+mobile-e2e/.wdio/
+mobile-e2e/appium-logs/
+wdio-logs/
