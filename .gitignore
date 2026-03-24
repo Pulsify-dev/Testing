@@ -130,6 +130,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+docs/
 
 # -----------------------------------------------------------------------------
 # e2e — Black-box Playwright Tests (JavaScript)
