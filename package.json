@@ -1,0 +1,25 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "description": "End-to-end, mobile integration, and performance stress tests for the **Pulsify** music streaming platform. Three independent testing pillars live side-by-side in this repo:",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pulsify-dev/Testing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Pulsify-dev/Testing/issues"
+  },
+  "homepage": "https://github.com/Pulsify-dev/Testing#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.5.0"
+  }
+}
