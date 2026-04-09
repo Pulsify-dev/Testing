@@ -1,7 +1,7 @@
 param(
-  [ValidateSet("all", "module1")]
-  [string]$Scope = "all",
-  [string]$BaseUrl = "https://pulsify.page"
+    [ValidateSet("all", "module1")]
+    [string]$Scope = "all",
+    [string]$BaseUrl = "https://pulsify.page"
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,7 +16,8 @@ Write-Host "BASE_URL : $env:BASE_URL"
 Write-Host "Scope    : $Scope"
 
 if ($Scope -eq "module1") {
-  npx playwright test --ui e2e/modules/module-01-auth --project=chromium
-} else {
-  npx playwright test --ui
+    npx playwright test --ui e2e/modules/module-01-auth --project=chromium
+}
+else {
+    npx playwright test --ui
 }
