@@ -6,7 +6,26 @@
   "directories": {
     "doc": "docs"
   },
-  "scripts": {},
+  "scripts": {
+    "gui": "powershell -ExecutionPolicy Bypass -File ./scripts/playwright-ui.ps1",
+    "gui:m1": "powershell -ExecutionPolicy Bypass -File ./scripts/playwright-ui.ps1 -Scope module1",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:auth": "playwright test e2e/modules/module-01-auth",
+    "test:e2e:auth:ui": "playwright test --ui e2e/modules/module-01-auth --project=chromium",
+    "test:e2e:profile": "playwright test e2e/modules/module-02-profile",
+    "test:e2e:m1": "playwright test e2e/modules/module-01-auth",
+    "test:e2e:m2": "playwright test e2e/modules/module-02-profile",
+    "test:e2e:m3": "playwright test e2e/modules/module-03-social",
+    "test:e2e:m4": "playwright test e2e/modules/module-04-tracks",
+    "test:e2e:m5": "playwright test e2e/modules/module-05-playback",
+    "test:e2e:m6": "playwright test e2e/modules/module-06-engagement",
+    "test:e2e:m1-m6": "playwright test e2e/modules",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:list": "playwright test --list",
+    "install:browsers": "playwright install --with-deps"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Pulsify-dev/Testing.git"
