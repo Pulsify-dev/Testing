@@ -1,5 +1,5 @@
 const { byText, byValueKey, byType } = require('appium-flutter-finder');
-const locators = require('../../mobile-locators.json');
+const locators = require('./mobile-locators.json');
 
 const testUser = {
     email: 'testuser@example.com',
@@ -52,9 +52,8 @@ describe('MEGA JOURNEY: Complete App Verification Flow E2E', () => {
         await browser.execute('flutter:waitFor', createAccountBtn, 5000);
         executionReport.push(' [VERIFIED] Registration screen verified! Going back to Login...');
 
-        await browser.switchContext('NATIVE_APP');
-        await browser.back();
-        await browser.switchContext('FLUTTER');
+        const loginLink = byText(locators.Auth.registerScreen.logInLink);
+        await browser.execute('flutter:clickElement', loginLink, { timeout: 5000 });
 
 
         executionReport.push('\n======================================================');
@@ -68,6 +67,7 @@ describe('MEGA JOURNEY: Complete App Verification Flow E2E', () => {
         await browser.elementSendKeys(emailInput, testUser.email);
 
         const passInput = byValueKey('login_password_field');
+        await browser.execute('flutter:waitFor', passInput, 5000);
         await browser.elementSendKeys(passInput, testUser.password);
 
         const loginBtn = byValueKey('login_button');

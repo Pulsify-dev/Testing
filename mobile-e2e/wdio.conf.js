@@ -1,3 +1,28 @@
+const os = require('os');
+const path = require('path');
+
+// ── Android SDK environment fix ──────────────────────────────────────────────
+// Appium requires ANDROID_HOME or ANDROID_SDK_ROOT to be set.
+// We inject it here so it works regardless of shell profile (.zshrc/.bashrc).
+// macOS default Android Studio SDK location: ~/Library/Android/sdk
+const ANDROID_SDK_PATH =
+    process.env.ANDROID_HOME ||
+    process.env.ANDROID_SDK_ROOT ||
+    path.join(os.homedir(), 'Library', 'Android', 'sdk');
+
+process.env.ANDROID_HOME     = ANDROID_SDK_PATH;
+process.env.ANDROID_SDK_ROOT = ANDROID_SDK_PATH;
+
+// Also add platform-tools and emulator to PATH so adb/emulator commands work
+const platformTools = path.join(ANDROID_SDK_PATH, 'platform-tools');
+const emulatorDir   = path.join(ANDROID_SDK_PATH, 'emulator');
+if (!process.env.PATH.includes(platformTools)) {
+    process.env.PATH = `${platformTools}:${emulatorDir}:${process.env.PATH}`;
+}
+
+console.log(`[wdio.conf.js] ANDROID_HOME → ${ANDROID_SDK_PATH}`);
+// ────────────────────────────────────────────────────────────────────────────
+
 exports.config = {
     //
     // ====================
@@ -9,24 +34,95 @@ exports.config = {
     // ==================
     // Specify Test Files
     // ==================
-    // Define which test specs should run. The pattern is relative to the directory
-    // of the configuration file being run.
-    //
-    // The specs are defined as an array of spec files (optionally using wildcards
-    // that will be expanded). The test for each spec file will be run in a separate
-    // worker process. In order to have a group of spec files run in the same worker
-    // process simply enclose them in an array within the specs array.
-    //
-    // The path of the spec files will be resolved relative from the directory of
-    // of the config file unless it's absolute.
+    // Default: run everything across all 4 modules.
+    // Override with --suite flag to run a specific module/feature.
     //
     specs: [
-        "./test/specs/module*/**/*.js"
+        "./test/specs/module*/**/*.js",
+        "./mega-journey.spec.js",
     ],
     // Patterns to exclude.
-    exclude: [
-        // 'path/to/excluded/files'
-    ],
+    exclude: [],
+
+    //
+    // ==================
+    // Named Suites
+    // ==================
+    // Run targeted suites with: npx wdio run wdio.conf.js --suite <name>
+    //
+    // Examples:
+    //   npx wdio run wdio.conf.js --suite auth
+    //   npx wdio run wdio.conf.js --suite profile
+    //   npx wdio run wdio.conf.js --suite social
+    //   npx wdio run wdio.conf.js --suite upload
+    //   npx wdio run wdio.conf.js --suite megajourney
+    //
+    suites: {
+        // ── Module 1: Authentication & User Management ──────────────────────
+        auth: [
+            './test/specs/module1-auth/login.spec.js',
+            './test/specs/module1-auth/register.spec.js',
+            './test/specs/module1-auth/account-recovery.spec.js',
+            './test/specs/module1-auth/social-identity.spec.js',
+            './test/specs/module1-auth/jwt-session.spec.js',
+        ],
+        login: [
+            './test/specs/module1-auth/login.spec.js',
+        ],
+        register: [
+            './test/specs/module1-auth/register.spec.js',
+        ],
+        recovery: [
+            './test/specs/module1-auth/account-recovery.spec.js',
+        ],
+        sso: [
+            './test/specs/module1-auth/social-identity.spec.js',
+        ],
+        jwt: [
+            './test/specs/module1-auth/jwt-session.spec.js',
+        ],
+
+        // ── Module 2: User Profile & Social Identity ─────────────────────
+        profile: [
+            './test/specs/module2-profile/profile-customization.spec.js',
+            './test/specs/module2-profile/visual-assets-social-privacy.spec.js',
+        ],
+        'profile-customization': [
+            './test/specs/module2-profile/profile-customization.spec.js',
+        ],
+        'profile-assets': [
+            './test/specs/module2-profile/visual-assets-social-privacy.spec.js',
+        ],
+
+        // ── Module 3: Followers & Social Graph ───────────────────────────
+        social: [
+            './test/specs/module3-social/social-graph.spec.js',
+        ],
+
+        // ── Module 4: Audio Upload & Track Management ────────────────────
+        upload: [
+            './test/specs/module4-upload/upload-track.spec.js',
+        ],
+
+        // ── Full Mega Journey ────────────────────────────────────────────
+        megajourney: [
+            './mega-journey.spec.js',
+        ],
+
+        // ── Full regression (all modules) ────────────────────────────────
+        regression: [
+            './test/specs/module1-auth/login.spec.js',
+            './test/specs/module1-auth/register.spec.js',
+            './test/specs/module1-auth/account-recovery.spec.js',
+            './test/specs/module1-auth/social-identity.spec.js',
+            './test/specs/module1-auth/jwt-session.spec.js',
+            './test/specs/module2-profile/profile-customization.spec.js',
+            './test/specs/module2-profile/visual-assets-social-privacy.spec.js',
+            './test/specs/module3-social/social-graph.spec.js',
+            './test/specs/module4-upload/upload-track.spec.js',
+            './mega-journey.spec.js',
+        ],
+    },
     //
     // ============
     // Capabilities
@@ -96,7 +192,7 @@ exports.config = {
     // baseUrl: 'http://localhost:8080',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: 15000,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -138,7 +234,7 @@ exports.config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 60000
+        timeout: 120000   // 2 min per test — Flutter driver + network on emulator is slow
     },
 
     //

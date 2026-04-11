@@ -24,8 +24,26 @@
   "scripts": {
     "test": "mocha",
     "wdio": "wdio run ./wdio.conf.js",
-    "wdio:flutter": "wdio run ./wdio.conf.js",
-    "wdio:soundcloud": "wdio run ./wdio.soundcloud.conf.js"
+    "wdio:soundcloud": "wdio run ./wdio.soundcloud.conf.js",
+
+    "test:regression": "wdio run ./wdio.conf.js --suite regression",
+
+    "test:auth": "wdio run ./wdio.conf.js --suite auth",
+    "test:auth:login": "wdio run ./wdio.conf.js --suite login",
+    "test:auth:register": "wdio run ./wdio.conf.js --suite register",
+    "test:auth:recovery": "wdio run ./wdio.conf.js --suite recovery",
+    "test:auth:sso": "wdio run ./wdio.conf.js --suite sso",
+    "test:auth:jwt": "wdio run ./wdio.conf.js --suite jwt",
+
+    "test:profile": "wdio run ./wdio.conf.js --suite profile",
+    "test:profile:customization": "wdio run ./wdio.conf.js --suite profile-customization",
+    "test:profile:assets": "wdio run ./wdio.conf.js --suite profile-assets",
+
+    "test:social": "wdio run ./wdio.conf.js --suite social",
+
+    "test:upload": "wdio run ./wdio.conf.js --suite upload",
+
+    "test:megajourney": "wdio run ./wdio.conf.js --suite megajourney"
   },
   "keywords": [],
   "author": "",
