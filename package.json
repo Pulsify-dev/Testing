@@ -9,6 +9,7 @@
   "scripts": {
     "gui": "powershell -ExecutionPolicy Bypass -File ./scripts/playwright-ui.ps1",
     "gui:m1": "powershell -ExecutionPolicy Bypass -File ./scripts/playwright-ui.ps1 -Scope module1",
+    "test:e2e:m1:v04:live": "powershell -ExecutionPolicy Bypass -File ./scripts/run-live-registration-tc04.ps1",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
