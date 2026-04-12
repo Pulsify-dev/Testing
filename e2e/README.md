@@ -44,7 +44,27 @@ This E2E suite is organized by project module to keep ownership, traceability, a
   - support/
     - module1-auth.helper.js
 - modules/module-02-profile
-  - profile.spec.js
+  - access/
+    - TC01-profile-route-protected.spec.js
+  - profile-card/
+    - TC01-profile-card-renders.spec.js
+    - TC02-identity-and-counters-visible.spec.js
+  - edit-modal/
+    - TC01-edit-modal-fields-visible.spec.js
+    - TC02-avatar-input-accepts-images.spec.js
+    - TC03-cover-input-accepts-images.spec.js
+    - TC04-cancel-keeps-display-name.spec.js
+    - TC05-profile-url-readonly.spec.js
+    - TC06-add-link-exposes-inputs.spec.js
+    - TC07-display-name-required.spec.js
+    - TC08-bio-maxlength-500.spec.js
+  - save-flow/
+    - TC01-save-unchanged-fields-handled.spec.js
+    - TC02-display-name-bio-persist-or-error.spec.js
+    - TC03-location-persist-or-error.spec.js
+    - TC04-invalid-display-name-server-rejection.spec.js
+  - support/
+    - module2-profile.helper.js
 - modules/module-03-social
   - social.smoke.spec.js
 - modules/module-04-tracks
