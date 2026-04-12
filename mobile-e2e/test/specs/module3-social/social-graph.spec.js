@@ -1,17 +1,7 @@
-/**
- * MODULE 3 — Followers & Social Graph
- * Test Suite: Follow/Unfollow, Network Lists, User Blocking/Moderation
- * Framework: Appium (Flutter) + WebdriverIO
- *
- * Pre-conditions:
- *   - App is logged in and on the Profile screen
- *   - At least one other user exists in the backend
- */
+
 
 const { byText, byValueKey } = require('appium-flutter-finder');
 const locators = require('../../../mobile-locators.json');
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 async function ensureOnProfileScreen() {
     const profileTitle = byText(locators.Profile.navigation.profileTitle);
@@ -42,8 +32,6 @@ async function navigateToFollowing() {
     await browser.execute('flutter:waitFor', followingTitle, 10000);
 }
 
-// ─── Test Suite ───────────────────────────────────────────────────────────────
-
 describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
 
     before(async () => {
@@ -54,24 +42,22 @@ describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
         console.log('  [SETUP] ✓ Profile screen confirmed.\n');
     });
 
-    // ── TC-SOC-001-01 ────────────────────────────────────────────────────────
     it('TC-SOC-001-01 | should display Followers screen with correct title', async () => {
         console.log('[TEST] Navigating to Followers screen via stat button...');
         await navigateToFollowers();
         console.log('  ✓ Followers screen rendered with correct title.');
     });
 
-    // ── TC-SOC-001-02 ────────────────────────────────────────────────────────
     it('TC-SOC-001-02 | should show Followers list or empty state message', async () => {
         console.log('[TEST] Verifying Followers list or empty state...');
 
         try {
-            // If user has followers, list renders
+
             const followBtn = byText(locators.Social.followButton);
             await browser.execute('flutter:waitFor', followBtn, 5000);
             console.log('  ✓ Followers list present with Follow/Unfollow actions.');
         } catch (_) {
-            // Empty state
+
             const noFollowers = byText(locators.Social.noFollowersText);
             try {
                 await browser.execute('flutter:waitFor', noFollowers, 5000);
@@ -82,14 +68,12 @@ describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
         }
     });
 
-    // ── TC-SOC-001-03 ────────────────────────────────────────────────────────
     it('TC-SOC-001-03 | should navigate to Following screen', async () => {
         console.log('[TEST] Navigating to Following screen...');
         await navigateToFollowing();
         console.log('  ✓ Following screen rendered with correct title.');
     });
 
-    // ── TC-SOC-001-04 ────────────────────────────────────────────────────────
     it('TC-SOC-001-04 | should show Following list or empty state message', async () => {
         console.log('[TEST] Verifying Following list or empty state...');
 
@@ -108,7 +92,6 @@ describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
         }
     });
 
-    // ── TC-SOC-001-05 ────────────────────────────────────────────────────────
     it('TC-SOC-001-05 | should access Suggested Users from Profile menu', async () => {
         console.log('[TEST] Opening Profile popup menu and tapping Suggested Users...');
 
@@ -134,7 +117,6 @@ describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
         console.log('  ✓ Suggested Users screen opened from profile menu.');
     });
 
-    // ── TC-SOC-001-06 ────────────────────────────────────────────────────────
     it('TC-SOC-001-06 | should allow follow action on Suggested Users screen', async () => {
         console.log('[TEST] Looking for Follow button on Suggested Users screen...');
 
@@ -144,7 +126,6 @@ describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
             await browser.execute('flutter:clickElement', followBtn, { timeout: 5000 });
             await browser.pause(2000);
 
-            // After follow, button should change to Unfollow
             const unfollowBtn = byText(locators.Social.unfollowButton);
             await browser.execute('flutter:waitFor', unfollowBtn, 8000);
             console.log('  ✓ Follow action triggered — button changed to Unfollow.');
@@ -154,7 +135,6 @@ describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
         }
     });
 
-    // ── TC-SOC-001-07 ────────────────────────────────────────────────────────
     it('TC-SOC-001-07 | should access Blocked Users from Profile menu', async () => {
         console.log('[TEST] Opening Profile popup menu and tapping Blocked Users...');
 
@@ -180,7 +160,6 @@ describe('TC-SOC-001 | Module 3: Followers & Social Graph', () => {
         console.log('  ✓ Blocked Users screen opened from profile menu.');
     });
 
-    // ── TC-SOC-001-08 ────────────────────────────────────────────────────────
     it('TC-SOC-001-08 | should allow Unblock action in Blocked Users screen', async () => {
         console.log('[TEST] Looking for Unblock option in Blocked Users list...');
 

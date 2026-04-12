@@ -31,11 +31,10 @@ describe('MEGA JOURNEY: Complete App Verification Flow E2E', () => {
         await browser.execute('flutter:clickElement', forgotPasswordLink, { timeout: 5000 });
 
         executionReport.push(' [VERIFIED] Forgot password screen hit! Going back...');
-        // Standard Android Back Button to return to Login
+
         await browser.switchContext('NATIVE_APP');
         await browser.back();
         await browser.switchContext('FLUTTER');
-
 
         executionReport.push('\n======================================================');
         executionReport.push(' MEGA STEP 2: Registration Validation ');
@@ -56,7 +55,6 @@ describe('MEGA JOURNEY: Complete App Verification Flow E2E', () => {
         await browser.back();
         await browser.switchContext('FLUTTER');
 
-
         executionReport.push('\n======================================================');
         executionReport.push(' MEGA STEP 3: Authentic User Login ');
         executionReport.push('======================================================');
@@ -64,7 +62,7 @@ describe('MEGA JOURNEY: Complete App Verification Flow E2E', () => {
         const emailInput = byValueKey('login_email_field');
         await browser.execute('flutter:waitFor', emailInput, 10000);
 
-        await browser.execute('flutter:setFrameSync', false); // Stop animation lock
+        await browser.execute('flutter:setFrameSync', false);
         await browser.elementSendKeys(emailInput, testUser.email);
 
         const passInput = byValueKey('login_password_field');
@@ -77,18 +75,14 @@ describe('MEGA JOURNEY: Complete App Verification Flow E2E', () => {
         await browser.execute('flutter:waitFor', profileScreen, 20000);
         executionReport.push(' [VERIFIED] Successfully Logged In and hit Profile Screen!');
 
-
         executionReport.push('\n======================================================');
         executionReport.push(' MEGA STEP 4: Editing Profile ');
         executionReport.push('======================================================');
 
-
-        // Click edit profile using centralized locator string
         const editProfileBtn = byText(locators.Profile.customization.editProfileBtn);
         await browser.execute('flutter:waitFor', editProfileBtn, 15000);
         await browser.execute('flutter:clickElement', editProfileBtn, { timeout: 5000 });
 
-        // Verify edit profile UI loaded by looking for standard element
         const saveChangesBtn = byText(locators.Profile.customization.saveChangesBtn);
         await browser.execute('flutter:waitFor', saveChangesBtn, 10000);
         executionReport.push(' [VERIFIED] Profile successfully opened for editing!');

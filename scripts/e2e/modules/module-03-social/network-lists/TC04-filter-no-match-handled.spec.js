@@ -15,7 +15,7 @@ test.describe('Module 3 Network Lists', () => {
         try {
             await expect(page.locator('.sc-user-card--skeleton')).toHaveCount(0, { timeout: 10000 });
         } catch {
-            // Continue with handled-state assertions if loading is slow.
+
         }
 
         const impossibleQuery = `__qa_no_match__${Date.now()}`;

@@ -1,5 +1,5 @@
 const { byText } = require('appium-flutter-finder');
-//
+
 describe('Social Tests', () => {
     it('finds Google', async () => {
         const t1 = byText('Continue with Google');

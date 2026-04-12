@@ -50,7 +50,7 @@ export async function dismissSoundCloudModals(page) {
     try {
         await page.keyboard.press('Escape');
     } catch {
-        // Ignore keyboard failures on pages that do not accept ESC.
+
     }
 }
 

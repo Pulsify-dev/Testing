@@ -1,17 +1,7 @@
-/**
- * MODULE 2 — User Profile & Social Identity
- * Test Suite: Profile Customization (Bio, Location, Favorite Genres, Display Name)
- * Framework: Appium (Flutter) + WebdriverIO
- *
- * Pre-conditions:
- *   - App is logged in and on the Profile screen
- *   - User has a profile loaded
- */
+
 
 const { byText, byValueKey } = require('appium-flutter-finder');
 const locators = require('../../../mobile-locators.json');
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 async function loginAndNavigateToProfile() {
     const emailLabel = byText(locators.Auth.loginScreen.emailLabel);
@@ -47,8 +37,6 @@ async function navigateToEditProfile() {
     await browser.execute('flutter:waitFor', editTitle, 10000);
 }
 
-// ─── Test Suite ───────────────────────────────────────────────────────────────
-
 describe('TC-PROF-001 | Module 2: Profile Customization', () => {
 
     before(async () => {
@@ -59,7 +47,6 @@ describe('TC-PROF-001 | Module 2: Profile Customization', () => {
         console.log('  [SETUP] ✓ Profile screen reached.\n');
     });
 
-    // ── TC-PROF-001-01 ────────────────────────────────────────────────────────
     it('TC-PROF-001-01 | should display Profile screen with all stat widgets', async () => {
         console.log('[TEST] Verifying Profile stats row (Followers / Following / Tracks)...');
 
@@ -74,7 +61,6 @@ describe('TC-PROF-001 | Module 2: Profile Customization', () => {
         console.log('  ✓ Profile stats (Followers / Following / Tracks) confirmed visible.');
     });
 
-    // ── TC-PROF-001-02 ────────────────────────────────────────────────────────
     it('TC-PROF-001-02 | should open Edit Profile screen and display all fields', async () => {
         console.log('[TEST] Opening Edit Profile and verifying all editable fields...');
 
@@ -95,7 +81,6 @@ describe('TC-PROF-001 | Module 2: Profile Customization', () => {
         console.log('  ✓ All editable profile fields confirmed present on Edit Profile screen.');
     });
 
-    // ── TC-PROF-001-03 ────────────────────────────────────────────────────────
     it('TC-PROF-001-03 | should update Bio field and save changes', async () => {
         console.log('[TEST] Updating Bio field...');
 
@@ -109,17 +94,14 @@ describe('TC-PROF-001 | Module 2: Profile Customization', () => {
         await browser.execute('flutter:waitFor', saveBtn, 5000);
         await browser.execute('flutter:clickElement', saveBtn, { timeout: 5000 });
 
-        // Wait for confirmation (either snackbar "Changes saved!" or screen pop)
         await browser.pause(2000);
 
         console.log('  ✓ Bio updated — Save Changes triggered successfully.');
     });
 
-    // ── TC-PROF-001-04 ────────────────────────────────────────────────────────
     it('TC-PROF-001-04 | should update Location field', async () => {
         console.log('[TEST] Updating Location field...');
 
-        // Re-enter edit profile if needed
         try {
             const editTitle = byText(locators.Profile.navigation.editProfileTitle);
             await browser.execute('flutter:waitFor', editTitle, 3000);
@@ -141,7 +123,6 @@ describe('TC-PROF-001 | Module 2: Profile Customization', () => {
         console.log('  ✓ Location updated to "Cairo, Egypt".');
     });
 
-    // ── TC-PROF-001-05 ────────────────────────────────────────────────────────
     it('TC-PROF-001-05 | should update Favorite Genres field (comma-separated tags)', async () => {
         console.log('[TEST] Updating Favorite Genres with comma-separated tags...');
 
@@ -166,7 +147,6 @@ describe('TC-PROF-001 | Module 2: Profile Customization', () => {
         console.log('  ✓ Favorite Genres updated with 4 genre tags.');
     });
 
-    // ── TC-PROF-001-06 ────────────────────────────────────────────────────────
     it('TC-PROF-001-06 | should discard changes via Discard Changes button', async () => {
         console.log('[TEST] Entering data then clicking Discard Changes...');
 
@@ -187,7 +167,6 @@ describe('TC-PROF-001 | Module 2: Profile Customization', () => {
         await browser.execute('flutter:waitFor', discardBtn, 5000);
         await browser.execute('flutter:clickElement', discardBtn, { timeout: 5000 });
 
-        // Should navigate back to Profile screen
         const profileTitle = byText(locators.Profile.navigation.profileTitle);
         await browser.execute('flutter:waitFor', profileTitle, 10000);
 

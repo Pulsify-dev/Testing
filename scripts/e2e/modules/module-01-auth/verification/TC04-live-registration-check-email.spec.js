@@ -24,7 +24,6 @@ test('TC-M1-V04 | live registration shows check-email state', async ({ page }) =
 
   const submitButton = page.locator(RegisterSelectors.submitButton);
 
-  // CAPTCHA is manual in headed mode. Wait for form to become submittable.
   await expect(submitButton).toBeEnabled({ timeout: manualCaptchaWaitMs });
   await submitButton.click();
 

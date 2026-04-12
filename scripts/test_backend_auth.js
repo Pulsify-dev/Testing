@@ -16,7 +16,6 @@ async function testAuth() {
       body: JSON.stringify(testUser)
     });
 
-    // Some APIs might return empty bodies or not true JSON on error, handling gracefully
     let regData;
     const regText = await regRes.text();
     try { regData = JSON.parse(regText); } catch (e) { regData = regText; }
@@ -43,7 +42,6 @@ async function testAuth() {
 
     console.log("Login Response Status:", loginRes.status);
 
-    // Check for tokens in typical places (accessToken, token, token data nesting)
     const token = loginData.accessToken || loginData.token || (loginData.data && loginData.data.accessToken) || loginData.refresh_token;
 
     if (loginRes.status === 200 && token) {

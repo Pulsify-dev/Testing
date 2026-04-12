@@ -7,7 +7,6 @@ describe('Module 1: Authentication - Account Recovery', () => {
         console.log(' Starting Forgot Password Automation Test...');
         console.log('======================================================\n');
 
-        // Appium needs elements to be laid out, so we wait for "Forgot Password" or similar text
         const forgotPasswordLink = byText('Forgot Password?');
         console.log(' Searching for "Forgot Password?" button...');
 

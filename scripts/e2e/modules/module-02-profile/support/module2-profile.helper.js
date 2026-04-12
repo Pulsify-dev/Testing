@@ -49,7 +49,7 @@ export async function submitProfileForm(page) {
             pageError.first().waitFor({ state: 'visible', timeout: 12000 }),
         ]);
     } catch {
-        // Keep flowing to deterministic assertions below.
+
     }
 
     const hasError =

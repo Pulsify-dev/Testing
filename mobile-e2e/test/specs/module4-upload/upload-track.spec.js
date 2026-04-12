@@ -1,20 +1,7 @@
-/**
- * MODULE 4 — Audio Upload & Track Management
- * Test Suite: Upload Flow, Metadata, Track Visibility, Waveform & Transcoding State
- * Framework: Appium (Flutter) + WebdriverIO
- *
- * Pre-conditions:
- *   - App is logged in as an Artist-tier user
- *   - Navigate to Profile → Uploaded tab or Upload via nav
- *
- * NOTE: Actual binary file upload (MP3/WAV) requires pushing a file to the emulator
- *       via `adb push` before running this suite. The spec validates the UI flow.
- */
+
 
 const { byText, byValueKey } = require('appium-flutter-finder');
 const locators = require('../../../mobile-locators.json');
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 async function ensureOnProfileUploadedTab() {
     const uploadedTab = byText(locators.Profile.tiers.uploadedTab);
@@ -22,8 +9,6 @@ async function ensureOnProfileUploadedTab() {
     await browser.execute('flutter:clickElement', uploadedTab, { timeout: 5000 });
     await browser.pause(1000);
 }
-
-// ─── Test Suite ───────────────────────────────────────────────────────────────
 
 describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
 
@@ -35,39 +20,34 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         console.log('  [SETUP] ✓ Uploaded tab reached.\n');
     });
 
-    // ── TC-UPLD-001-01 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-01 | should display Uploaded track list or empty state', async () => {
         console.log('[TEST] Verifying Uploaded tab shows tracks or correct empty state...');
 
         try {
-            // If tracks exist: look for any track text
+
             const emptyState = byText(locators.Upload.noUploadedTracksText);
             await browser.execute('flutter:waitFor', emptyState, 5000);
             console.log('  ✓ Empty state "No uploaded tracks yet." displayed correctly.');
         } catch (_) {
-            // Tracks exist
+
             console.log('  ✓ Uploaded tracks list is rendered (tracks found).');
         }
     });
 
-    // ── TC-UPLD-001-02 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-02 | should open Upload Track screen and render all required fields', async () => {
         console.log('[TEST] Navigating to Upload Track screen via nav bar or route...');
 
-        // Navigate via named route by tapping the upload button if visible
-        // Or use the wdio.conf.js route by navigating to upload nav item
         try {
             const uploadBtn = byText(locators.Upload.uploadTrackTitle);
             await browser.execute('flutter:waitFor', uploadBtn, 5000);
             await browser.execute('flutter:clickElement', uploadBtn, { timeout: 5000 });
         } catch (_) {
-            // Try to find nav-level upload access (tab or FAB)
+
             console.log('  [INFO] Upload button not found as text — checking nav...');
         }
 
         await browser.pause(2000);
 
-        // Verify Upload screen fields
         const trackTitleField   = byText(locators.Upload.trackTitleLabel);
         const genreField        = byText(locators.Upload.genreLabel);
         const descriptionField  = byText(locators.Upload.descriptionLabel);
@@ -85,7 +65,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         }
     });
 
-    // ── TC-UPLD-001-03 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-03 | should fill and validate Track Title field', async () => {
         console.log('[TEST] Filling Track Title field...');
 
@@ -98,7 +77,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         console.log('  ✓ Track Title "QA Test Track - Automation Run" entered.');
     });
 
-    // ── TC-UPLD-001-04 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-04 | should fill Genre and Tags/Description metadata fields', async () => {
         console.log('[TEST] Filling Genre and Description fields...');
 
@@ -115,7 +93,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         console.log('  ✓ Genre ("Electronic") and Description/Tags filled.');
     });
 
-    // ── TC-UPLD-001-05 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-05 | should display Public/Private visibility toggle', async () => {
         console.log('[TEST] Checking for track visibility (Public/Private) toggle...');
 
@@ -130,7 +107,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         }
     });
 
-    // ── TC-UPLD-001-06 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-06 | should block upload submission without selecting an audio file', async () => {
         console.log('[TEST] Attempting upload without selecting an audio file...');
 
@@ -138,7 +114,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         await browser.execute('flutter:waitFor', uploadBtn, 5000);
         await browser.execute('flutter:clickElement', uploadBtn, { timeout: 5000 });
 
-        // App should stay on upload screen or show a validation error
         await browser.pause(2000);
         const trackTitleField = byText(locators.Upload.trackTitleLabel);
         try {
@@ -149,11 +124,9 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         }
     });
 
-    // ── TC-UPLD-001-07 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-07 | should show processing status on track after upload', async () => {
         console.log('[TEST] Verifying that uploaded tracks show "Processing" or "Finished" status...');
 
-        // Navigate back to profile
         await browser.switchContext('NATIVE_APP');
         await browser.back();
         await browser.switchContext('FLUTTER');
@@ -177,7 +150,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         }
     });
 
-    // ── TC-UPLD-001-08 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-08 | should allow editing an uploaded track via track action menu', async () => {
         console.log('[TEST] Opening track action menu on an uploaded track...');
 
@@ -198,7 +170,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         }
     });
 
-    // ── TC-UPLD-001-09 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-09 | should show delete confirmation dialog before deleting a track', async () => {
         console.log('[TEST] Triggering Delete flow on an uploaded track...');
 
@@ -211,7 +182,6 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
             await browser.execute('flutter:waitFor', confirmDialog, 8000);
             console.log('  ✓ Delete confirmation dialog appeared before deleting.');
 
-            // Dismiss: tap Cancel
             const cancelBtn = byText(locators.Upload.cancelDeleteBtn);
             await browser.execute('flutter:waitFor', cancelBtn, 5000);
             await browser.execute('flutter:clickElement', cancelBtn, { timeout: 5000 });
@@ -222,13 +192,8 @@ describe('TC-UPLD-001 | Module 4: Audio Upload & Track Management', () => {
         }
     });
 
-    // ── TC-UPLD-001-10 ────────────────────────────────────────────────────────
     it('TC-UPLD-001-10 | should accept audio formats MP3 and WAV (format validation)', async () => {
         console.log('[TEST] Verifying accepted audio format documentation/labels...');
-
-        // This is a UI assertion test: verify the upload screen mentions accepted formats
-        // or the file picker filters for audio files (mp3, wav)
-        // On a real emulator with adb push, we'd push both formats and verify acceptance
 
         console.log('  [INFO] Format validation (MP3/WAV/high-bitrate) requires:');
         console.log('         1. adb push test_audio.mp3 /sdcard/Download/');

@@ -1,9 +1,9 @@
-const { ancestor, byText, byTooltip, byType, byValueKey } = require('appium-flutter-finder');
-
-const WAIT = {
-    short: 2500,
-    medium: 5000,
-};
+const { byText, byType, byValueKey } = require('appium-flutter-finder');
+const { 
+    WAIT, tap, fieldByHint, plainTextFieldByHint, 
+    tapFirstAvailable, focusAndEnterText, waitForAny, 
+    appears, hideKeyboard 
+} = require('../support/helpers');
 
 const PRIMARY_USER = {
     email: 'youssef.shafik04@eng-st.cu.edu.eg',
@@ -15,99 +15,6 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
 
     function resolveAuthUsers() {
         return [PRIMARY_USER];
-    }
-
-    /**
-     * Final simplified tap helper: Remove timeout object to prevent driver-side hangs.
-     */
-    async function tap(locator, waitTimeout = WAIT.medium) {
-        await browser.execute('flutter:waitFor', locator, waitTimeout);
-
-        // Prefer flutter clickElement to avoid long driver hangs on some widgets.
-        try {
-            await browser.execute('flutter:clickElement', locator, { timeout: waitTimeout });
-        } catch (_) {
-            await browser.elementClick(locator);
-        }
-    }
-
-    function fieldByHint(hintText) {
-        return ancestor({
-            of: byText(hintText),
-            matching: byType('TextFormField'),
-            matchRoot: true,
-            firstMatchOnly: true,
-        });
-    }
-
-    function fieldByLabel(labelText) {
-        return ancestor({
-            of: byText(labelText),
-            matching: byType('TextFormField'),
-            matchRoot: true,
-            firstMatchOnly: true,
-        });
-    }
-
-    function plainTextFieldByHint(hintText) {
-        return ancestor({
-            of: byText(hintText),
-            matching: byType('TextField'),
-            matchRoot: true,
-            firstMatchOnly: true,
-        });
-    }
-
-    async function focusAndEnterText(locators, value, timeoutPerLocator = WAIT.short) {
-        await tapFirstAvailable(locators, timeoutPerLocator);
-        await browser.execute('flutter:enterText', value);
-    }
-
-    async function tapFirstAvailable(locators, timeoutPerLocator = WAIT.short) {
-        let lastError;
-        for (const locator of locators) {
-            try {
-                await tap(locator, timeoutPerLocator);
-                return locator;
-            } catch (error) {
-                lastError = error;
-            }
-        }
-
-        throw lastError || new Error('No tappable locator matched in time.');
-    }
-
-    async function waitForAny(
-        locators,
-        timeoutPerLocator = WAIT.short,
-        totalTimeoutMs = timeoutPerLocator * Math.max(1, locators.length),
-    ) {
-        const deadline = Date.now() + totalTimeoutMs;
-        let lastError;
-
-        while (Date.now() < deadline) {
-            for (const locator of locators) {
-                try {
-                    await browser.execute('flutter:waitFor', locator, Math.min(timeoutPerLocator, 700));
-                    return locator;
-                } catch (error) {
-                    lastError = error;
-                }
-            }
-
-            await browser.pause(120);
-        }
-
-        throw lastError || new Error('None of the expected widgets appeared in time.');
-    }
-
-    async function appears(locator, timeout = WAIT.short) {
-        try {
-            await browser.execute('flutter:waitFor', locator, timeout);
-            return true;
-        } catch (_) {
-            return false;
-        }
     }
 
     async function assessLoginOutcome() {
@@ -157,7 +64,6 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
             await browser.execute('flutter:waitFor', byText('Edit Profile'), WAIT.short);
             return;
         } catch (_) {
-            // Continue to navigation fallback below.
         }
 
         await tapFirstAvailable([
@@ -180,7 +86,6 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
             return;
         }
 
-        // nav_upload exists on Home app bar, so route through Home first when needed.
         await tapFirstAvailable([
             byValueKey('nav_home'),
             byText('Home'),
@@ -205,27 +110,9 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
         ], WAIT.medium, 9000);
     }
 
-    /**
-     * Context-aware hide keyboard
-     */
-    async function hideKeyboard() {
-        try {
-            await browser.switchContext('NATIVE_APP');
-            await browser.hideKeyboard();
-            await browser.switchContext('FLUTTER');
-        } catch (e) {
-            // Ignore if fails
-        } finally {
-            const context = await browser.getContext();
-            if (context !== 'FLUTTER') await browser.switchContext('FLUTTER');
-        }
-    }
-
-    // We disable frame sync to bypass Appium native timeouts on animations
     beforeEach(async () => {
         await browser.execute('flutter:setFrameSync', false);
     });
-
 
     describe('▶️ MODULE 1: Authentication & Onboarding', () => {
         async function loginWithResolvedUser(authUser) {
@@ -252,9 +139,7 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
             const passLabel = byText('Password');
             await browser.execute('flutter:waitFor', passLabel, WAIT.short);
 
-            // ReCaptcha (CAPTCHA) is a known missing item in Cross. Bypassing by not asserting it here.
-            // This test focuses purely on the successful visibility of core functional elements.
-            expect(true).toBe(true); // Placeholder for framework green check
+            expect(true).toBe(true);
         });
 
         it('TC-AUTH-002 | should sign in successfully with the configured account', async () => {
@@ -282,7 +167,6 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
         it('TC-PROF-001 | should navigate to Profile and load user assets', async () => {
             await ensureOnProfileScreen();
 
-            // Ensure Profile data resolved
             const editProfileBtn = byText('Edit Profile');
             await browser.execute('flutter:waitFor', editProfileBtn, WAIT.medium);
         });
@@ -300,7 +184,6 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
             await browser.execute('flutter:waitFor', saveBtn, WAIT.medium);
             await browser.pause(1000);
 
-            // Leave Edit Profile so following module starts from Profile root.
             await browser.switchContext('NATIVE_APP');
             await browser.back();
             await browser.switchContext('FLUTTER');
@@ -312,10 +195,8 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
         it('TC-SOC-001 | should render network statistics properly', async () => {
             await ensureOnProfileScreen();
 
-            // stabilization pause after profile navigation
             await browser.pause(800);
 
-            // Note: Screen uses .toUpperCase() for these labels
             const followersCounter = byText('FOLLOWERS');
             await browser.execute('flutter:waitFor', followersCounter, WAIT.medium);
             expect(true).toBe(true);

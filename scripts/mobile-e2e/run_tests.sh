@@ -1,23 +1,6 @@
 #!/bin/bash
-# ═══════════════════════════════════════════════════════════════
-#  Pulsify Mobile E2E — Full Execution Script
-#  Cross-Platform Testing Team
-#
-#  Usage:
-#    bash run_tests.sh                  → runs full regression suite
-#    bash run_tests.sh auth             → Module 1: Auth only
-#    bash run_tests.sh register         → Auth: Registration only
-#    bash run_tests.sh recovery         → Auth: Account Recovery only
-#    bash run_tests.sh sso              → Auth: SSO only
-#    bash run_tests.sh jwt              → Auth: JWT/Session only
-#    bash run_tests.sh profile          → Module 2: Profile only
-#    bash run_tests.sh social           → Module 3: Social Graph only
-#    bash run_tests.sh upload           → Module 4: Upload only
-#    bash run_tests.sh megajourney      → Full Mega Journey E2E
-#    bash run_tests.sh regression       → All 57 test cases
-# ═══════════════════════════════════════════════════════════════
 
-set -e  # exit on any command failure
+set -e
 
 SUITE=${1:-regression}
 EMULATOR_AVD="Pixel_6_API_33"
@@ -26,14 +9,12 @@ APPIUM_PORT=4723
 APPIUM_PID=""
 EMULATOR_PID=""
 
-# ── Colors ──────────────────────────────────────────────────────
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# ── Cleanup handler (kill background processes on exit) ──────────
 cleanup() {
     echo ""
     echo -e "${CYAN}[CLEANUP] Stopping background processes...${NC}"
@@ -42,9 +23,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# ── Android SDK Auto-Detection ───────────────────────────────────────────────
-# Inject SDK path if adb is not already on PATH (common when running from IDE
-# terminals or scripts that don't source ~/.zshrc)
 ANDROID_SDK_DEFAULT="$HOME/Library/Android/sdk"
 if [ -z "$ANDROID_HOME" ] && [ -d "$ANDROID_SDK_DEFAULT" ]; then
     export ANDROID_HOME="$ANDROID_SDK_DEFAULT"
@@ -53,9 +31,7 @@ fi
 if [ -n "$ANDROID_HOME" ]; then
     export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
 fi
-# ────────────────────────────────────────────────────────────────────────────
 
-# ─────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${CYAN}════════════════════════════════════════════════${NC}"
 echo -e "${CYAN}  🎵  Pulsify Mobile E2E Test Runner${NC}"
@@ -64,7 +40,6 @@ echo -e "${CYAN}  Date  : $(date '+%Y-%m-%d %H:%M:%S')${NC}"
 echo -e "${CYAN}════════════════════════════════════════════════${NC}"
 echo ""
 
-# ── Step 1: Dependency Checks ────────────────────────────────────
 echo -e "${CYAN}[1/7] Checking required dependencies...${NC}"
 
 check_cmd() {
@@ -89,7 +64,6 @@ fi
 
 echo ""
 
-# ── Step 2: Build APK Check ──────────────────────────────────────
 echo -e "${CYAN}[2/7] Verifying Pulsify APK exists...${NC}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APK_ABS="$SCRIPT_DIR/$APK_REL_PATH"
@@ -107,10 +81,8 @@ else
 fi
 echo ""
 
-# ── Step 3: Start Emulator ───────────────────────────────────────
 echo -e "${CYAN}[3/7] Starting Android Emulator ($EMULATOR_AVD)...${NC}"
 
-# Check if emulator already running
 if adb devices | grep -q "emulator-5554.*device"; then
     echo -e "  ${GREEN}✓ Emulator already running (emulator-5554 detected).${NC}"
 else
@@ -127,7 +99,6 @@ else
     echo -e "  ${CYAN}Waiting for emulator to boot (this can take 60-90s)...${NC}"
     adb wait-for-device
 
-    # Wait for full boot
     BOOT_COMPLETE=""
     MAX_WAIT=120
     ELAPSED=0
@@ -147,13 +118,11 @@ else
 fi
 echo ""
 
-# ── Step 4: Install APK ──────────────────────────────────────────
 echo -e "${CYAN}[4/7] Installing Pulsify APK on emulator...${NC}"
 adb install -r "$APK_ABS"
 echo -e "  ${GREEN}✓ APK installed: com.pulsify.app${NC}"
 echo ""
 
-# ── Step 5: Push Test Assets (for Upload tests) ──────────────────
 echo -e "${CYAN}[5/7] Checking test audio assets for Upload module...${NC}"
 ASSETS_DIR="$SCRIPT_DIR/../../test_assets"
 mkdir -p "$ASSETS_DIR"
@@ -176,10 +145,8 @@ if [ -f "$ASSETS_DIR/sample.mp3" ]; then
 fi
 echo ""
 
-# ── Step 6: Start Appium Server ──────────────────────────────────
 echo -e "${CYAN}[6/7] Starting Appium server on port $APPIUM_PORT...${NC}"
 
-# Check if Appium already running
 if curl -s "http://127.0.0.1:$APPIUM_PORT/status" | grep -q '"ready":true'; then
     echo -e "  ${GREEN}✓ Appium already running.${NC}"
 else
@@ -204,12 +171,11 @@ else
 fi
 echo ""
 
-# ── Step 7: Run Tests ────────────────────────────────────────────
 echo -e "${CYAN}[7/7] Executing test suite: ${YELLOW}$SUITE${NC}"
 echo -e "${CYAN}────────────────────────────────────────────────${NC}"
 echo ""
 
-set +e  # allow test failure without stopping script
+set +e
 npx wdio run ./wdio.conf.js --suite "$SUITE"
 TEST_EXIT_CODE=$?
 set -e
