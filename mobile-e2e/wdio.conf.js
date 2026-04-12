@@ -10,12 +10,12 @@ const ANDROID_SDK_PATH =
     process.env.ANDROID_SDK_ROOT ||
     path.join(os.homedir(), 'Library', 'Android', 'sdk');
 
-process.env.ANDROID_HOME     = ANDROID_SDK_PATH;
+process.env.ANDROID_HOME = ANDROID_SDK_PATH;
 process.env.ANDROID_SDK_ROOT = ANDROID_SDK_PATH;
 
 // Also add platform-tools and emulator to PATH so adb/emulator commands work
 const platformTools = path.join(ANDROID_SDK_PATH, 'platform-tools');
-const emulatorDir   = path.join(ANDROID_SDK_PATH, 'emulator');
+const emulatorDir = path.join(ANDROID_SDK_PATH, 'emulator');
 if (!process.env.PATH.includes(platformTools)) {
     process.env.PATH = `${platformTools}:${emulatorDir}:${process.env.PATH}`;
 }
@@ -155,7 +155,10 @@ exports.config = {
         "appium:deviceName": "Android Emulator",
         "appium:udid": "emulator-5554",
         "appium:automationName": "Flutter",
-        "appium:app": `${process.cwd()}/../../Cross/build/app/outputs/flutter-apk/app-debug.apk`
+        "appium:app": `${process.cwd()}/../../Cross/build/app/outputs/flutter-apk/app-debug.apk`,
+        "appium:uiautomator2ServerLaunchTimeout": 120000,
+        "appium:adbExecTimeout": 120000,
+        "appium:newCommandTimeout": 180,
     }],
 
     //
@@ -181,9 +184,8 @@ exports.config = {
     //     '@wdio/appium-service': 'info'
     // },
     //
-    // If you only want to run your tests until a specific amount of tests have failed use
-    // bail (default is 0 - don't bail, run all tests).
-    bail: 0,
+    // Stop on first failing test in a run to keep regression feedback fast.
+    bail: 1,
     //
     // Set a base URL in order to shorten url command calls. If your `url` parameter starts
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
@@ -191,15 +193,14 @@ exports.config = {
     // gets prepended directly.
     // baseUrl: 'http://localhost:8080',
     //
-    // Default timeout for all waitFor* commands.
-    waitforTimeout: 15000,
+    // Fail faster on missing widgets.
+    waitforTimeout: 2500,
     //
-    // Default timeout in milliseconds for request
-    // if browser driver or grid doesn't send response
-    connectionRetryTimeout: 120000,
+    // Keep command-level hangs short so we fail fast.
+    connectionRetryTimeout: 60000,
     //
-    // Default request retries count
-    connectionRetryCount: 3,
+    // Do not retry failing commands; fail immediately.
+    connectionRetryCount: 0,
     //
     // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
@@ -234,7 +235,8 @@ exports.config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 120000   // 2 min per test — Flutter driver + network on emulator is slow
+        timeout: 25000,
+        bail: true
     },
 
     //

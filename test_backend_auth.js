@@ -10,16 +10,16 @@ async function testAuth() {
 
   console.log("\n1. Registering new test user:", testUser.email);
   try {
-    const regRes = await fetch("http://localhost:3000/api/v1/auth/register", {
+    const regRes = await fetch("http://localhost:3000/v1/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(testUser)
     });
-    
+
     // Some APIs might return empty bodies or not true JSON on error, handling gracefully
     let regData;
     const regText = await regRes.text();
-    try { regData = JSON.parse(regText); } catch(e) { regData = regText; }
+    try { regData = JSON.parse(regText); } catch (e) { regData = regText; }
 
     console.log("Register Response:", regRes.status, regData);
 
@@ -31,7 +31,7 @@ async function testAuth() {
     console.log("\n✅ Registration successful!");
 
     console.log("\n2. Logging in with test user...");
-    const loginRes = await fetch("http://localhost:3000/api/v1/auth/login", {
+    const loginRes = await fetch("http://localhost:3000/v1/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: testUser.email, password: testUser.password })
@@ -39,10 +39,10 @@ async function testAuth() {
 
     let loginData;
     const loginText = await loginRes.text();
-    try { loginData = JSON.parse(loginText); } catch(e) { loginData = loginText; }
-    
+    try { loginData = JSON.parse(loginText); } catch (e) { loginData = loginText; }
+
     console.log("Login Response Status:", loginRes.status);
-    
+
     // Check for tokens in typical places (accessToken, token, token data nesting)
     const token = loginData.accessToken || loginData.token || (loginData.data && loginData.data.accessToken) || loginData.refresh_token;
 
