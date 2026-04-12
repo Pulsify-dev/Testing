@@ -104,7 +104,12 @@ This E2E suite is organized by project module to keep ownership, traceability, a
     - history-signals/TC01-playback-history-signals.spec.js
     - responsive-player/TC01-sticky-player-visible-after-scroll.spec.js
     - support/module5-soundcloud.helper.js
-  - module-06-engagement/soundcloud-engagement.benchmark.spec.js
+  - module-06-engagement
+    - likes-favorites/TC01-like-actions-and-count-signals.spec.js
+    - reposts-share/TC01-repost-and-share-signals.spec.js
+    - timestamped-comments/TC01-comment-and-timestamp-signals.spec.js
+    - engagement-lists/TC01-likes-and-reposts-list-signals.spec.js
+    - support/module6-soundcloud.helper.js
   - support/soundcloud.helper.js
 - support
   - selectors.js
