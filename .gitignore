@@ -16,6 +16,7 @@ desktop.ini
 .vscode/settings.json
 .vscode/.ropeproject
 
+
 # -----------------------------------------------------------------------------
 # web-e2e — Playwright / TypeScript / ESLint
 # -----------------------------------------------------------------------------
@@ -28,7 +29,7 @@ web-e2e/test-results/
 web-e2e/playwright-report/
 web-e2e/.playwright/
 web-e2e/blob-report/
-
+scripts/
 # TypeScript build output
 web-e2e/*.tsbuildinfo
 
@@ -68,6 +69,7 @@ mobile-e2e/coverage/
 # -----------------------------------------------------------------------------
 
 # Test run output
+
 stress-tests/results/
 stress-tests/*.json.out
 stress-tests/summary.json

@@ -9,6 +9,12 @@
   "scripts": {
     "gui": "powershell -ExecutionPolicy Bypass -File ./scripts/playwright-ui.ps1",
     "gui:m1": "powershell -ExecutionPolicy Bypass -File ./scripts/playwright-ui.ps1 -Scope module1",
+    "test:e2e:m1:terminal": "powershell -ExecutionPolicy Bypass -File ./scripts/run-m1-terminal.ps1",
+    "test:e2e:m1:ui:script": "powershell -ExecutionPolicy Bypass -File ./scripts/run-m1-ui.ps1",
+    "test:e2e:m2:terminal": "powershell -ExecutionPolicy Bypass -File ./scripts/run-m2-terminal.ps1",
+    "test:e2e:m2:ui:script": "powershell -ExecutionPolicy Bypass -File ./scripts/run-m2-ui.ps1",
+    "test:e2e:m3:terminal": "powershell -ExecutionPolicy Bypass -File ./scripts/run-m3-terminal.ps1",
+    "test:e2e:m3:ui:script": "powershell -ExecutionPolicy Bypass -File ./scripts/run-m3-ui.ps1",
     "test:e2e:m1:v04:live": "powershell -ExecutionPolicy Bypass -File ./scripts/run-live-registration-tc04.ps1",
     "test:e2e:sc:m4": "playwright test e2e/benchmark/soundcloud/module-04-tracks --project=chromium",
     "test:e2e:sc:m5": "playwright test e2e/benchmark/soundcloud/module-05-playback --project=chromium",

@@ -66,7 +66,24 @@ This E2E suite is organized by project module to keep ownership, traceability, a
   - support/
     - module2-profile.helper.js
 - modules/module-03-social
-  - social.smoke.spec.js
+  - navigation/
+    - TC01-social-tabs-and-route-headings.spec.js
+  - relationship-management/
+    - TC01-follow-controls-or-handled.spec.js
+    - TC02-follow-toggle-valid-state.spec.js
+  - network-lists/
+    - TC01-following-view-handled-state.spec.js
+    - TC02-followers-view-handled-state.spec.js
+    - TC03-suggested-users-panel.spec.js
+    - TC04-filter-no-match-handled.spec.js
+    - TC05-pagination-controls-handled.spec.js
+  - moderation/
+    - TC01-block-modal-open-cancel.spec.js
+    - TC02-blocked-users-view-handled-state.spec.js
+    - TC03-edit-block-reason-modal.spec.js
+    - TC04-unblock-action-handled.spec.js
+  - support/
+    - module3-social.helper.js
 - modules/module-04-tracks
   - tracks.smoke.spec.js
 - modules/module-05-playback
@@ -74,7 +91,12 @@ This E2E suite is organized by project module to keep ownership, traceability, a
 - modules/module-06-engagement
   - engagement.smoke.spec.js
 - benchmark/soundcloud
-  - module-04-tracks/soundcloud-tracks.benchmark.spec.js
+  - module-04-tracks
+    - visibility/TC01-public-track-accessible.spec.js
+    - metadata/TC01-track-metadata-signals.spec.js
+    - playback-surface/TC01-waveform-or-seekbar-visible.spec.js
+    - playback-surface/TC02-track-stream-readiness.spec.js
+    - support/module4-soundcloud.helper.js
   - module-05-playback/soundcloud-playback.benchmark.spec.js
   - module-06-engagement/soundcloud-engagement.benchmark.spec.js
   - support/soundcloud.helper.js
