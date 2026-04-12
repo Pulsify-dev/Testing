@@ -184,13 +184,13 @@ describe('Pulsify Final QA Regression Suite (Modules 1-4)', () => {
         await tapFirstAvailable([
             byValueKey('nav_home'),
             byText('Home'),
-        ], WAIT.short).catch(() => {});
+        ], WAIT.short).catch(() => { });
 
         await waitForAny([
             byText('Pulsify'),
             byText('Discover New Sounds'),
             byText('Home'),
-        ], WAIT.medium, 9000).catch(() => {});
+        ], WAIT.medium, 9000).catch(() => { });
 
         await tapFirstAvailable([
             byValueKey('nav_upload'),
