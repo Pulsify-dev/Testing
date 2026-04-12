@@ -1,5 +1,6 @@
 
 export const AuthSelectors = {
+  navbarBrand: '.auth-navbar-left',
   emailInput: 'input[placeholder="Email address"]',
   passwordInput: 'input[placeholder="Password"]',
   loginButton: 'button:has-text("Sign in")',

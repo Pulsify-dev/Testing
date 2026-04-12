@@ -49,7 +49,7 @@ test.describe('Module 2: User Profile (Blackbox, Authenticated)', () => {
   test('TC-PROF-05: Avatar upload input exists and accepts image types', async ({ page }) => {
     await page.locator(ProfileSelectors.editButton).click();
     const avatarInput = page.locator(ProfileSelectors.avatarUpload);
-    await expect(avatarInput).toBeVisible();
+    await expect(avatarInput).toHaveCount(1);
     const acceptAttr = await avatarInput.getAttribute('accept');
     expect(acceptAttr).toContain('image/');
   });

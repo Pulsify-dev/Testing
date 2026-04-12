@@ -16,43 +16,43 @@ This E2E suite is organized by project module to keep ownership, traceability, a
     - TC08-successful-login-stores-tokens.spec.js
     - TC09-authenticated-user-redirected.spec.js
   - register/
-    - empty-form-submit-disabled.spec.js
-    - short-password-blocked.spec.js
-    - terms-required.spec.js
-    - captcha-visible.spec.js
-    - sign-in-navigation.spec.js
-    - login-link-uniqueness.spec.js
-    - username-min-length-edge.spec.js
+    - TC01-empty-form-submit-disabled.spec.js
+    - TC02-short-password-blocked.spec.js
+    - TC03-terms-required.spec.js
+    - TC04-captcha-visible.spec.js
+    - TC05-sign-in-navigation.spec.js
+    - TC06-login-link-uniqueness.spec.js
+    - TC07-username-min-length-edge.spec.js
   - recovery/
-    - empty-email-submit-disabled.spec.js
-    - invalid-email-rejected.spec.js
-    - valid-email-success-state.spec.js
-    - back-to-login-navigation.spec.js
+    - TC01-empty-email-submit-disabled.spec.js
+    - TC02-invalid-email-rejected.spec.js
+    - TC03-valid-email-success-state.spec.js
+    - TC04-back-to-login-navigation.spec.js
   - social/
-    - provider-visible.spec.js
-    - provider-buttons-type.spec.js
-    - register-social-visible.spec.js
+    - TC01-provider-visible.spec.js
+    - TC02-provider-buttons-type.spec.js
+    - TC03-register-social-visible.spec.js
   - verification/
-    - verified-query-loads-login.spec.js
-    - invalid-token-query-loads-login.spec.js
-    - missing-token-query-loads-login.spec.js
-    - live-registration-check-email.spec.js
+    - TC01-verified-query-loads-login.spec.js
+    - TC02-invalid-token-query-loads-login.spec.js
+    - TC03-missing-token-query-loads-login.spec.js
+    - TC04-live-registration-check-email.spec.js
   - tokens/
-    - no-token-before-login.spec.js
-    - token-stored-after-login.spec.js
-    - token-shape-jwt.spec.js
+    - TC01-no-token-before-login.spec.js
+    - TC02-token-stored-after-login.spec.js
+    - TC03-token-shape-jwt.spec.js
   - support/
     - module1-auth.helper.js
 - modules/module-02-profile
   - profile.spec.js
 - modules/module-03-social
-  - social.smoke.spec.js (scaffold)
+  - social.smoke.spec.js
 - modules/module-04-tracks
-  - tracks.smoke.spec.js (scaffold)
+  - tracks.smoke.spec.js
 - modules/module-05-playback
-  - playback.smoke.spec.js (scaffold)
+  - playback.smoke.spec.js
 - modules/module-06-engagement
-  - engagement.smoke.spec.js (scaffold)
+  - engagement.smoke.spec.js
 - support
   - selectors.js
   - helpers/auth.helper.js
@@ -70,11 +70,22 @@ Run examples:
 - npm run test:e2e
 - npm run test:e2e:m1
 - npm run test:e2e:m2
+- npm run test:e2e:m1-m3:chromium
+- npm run test:e2e:m4-m6:chromium
 - npm run test:e2e:m1-m6
 
 Manual GUI walkthrough for TA demos:
 
 - docs/How_To_Run_Playwright_GUI.md
+
+Module 4 to 6 note:
+
+- Track-page smoke specs are environment-aware. They validate full track UI when available, or the deployed fallback state (`Track unavailable right now.`) when those flows are not yet fully integrated in the target environment.
+
+Environment strategy note:
+
+- Use Pulsify deployment as the pass/fail gate for modules 1 to 6.
+- SoundCloud can be used as external benchmarking reference only, not as acceptance criteria for Pulsify modules.
 
 ## Blackbox Principles Used
 

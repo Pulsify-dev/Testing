@@ -30,8 +30,11 @@ test.describe('Module 1: Login (Blackbox)', () => {
 
   test('TC-AUTH-04: Login legal text uses Pulsify branding', async ({ page }) => {
     const termsText = page.locator(AuthSelectors.termsText);
+    const navbarBrand = page.locator(AuthSelectors.navbarBrand);
     await expect(termsText).not.toContainText('SoundCloud');
     await expect(termsText).toContainText('Pulsify');
+    await expect(navbarBrand).not.toContainText('SoundCloud');
+    await expect(navbarBrand).toContainText('Pulsify');
   });
 
   test('TC-AUTH-05: "Create account" link navigates to /register', async ({ page }) => {
