@@ -1,0 +1,54 @@
+{
+    "Auth": {
+        "loginScreen": {
+            "emailLabel": "Email Address",
+            "passwordLabel": "Password",
+            "loginButtonText": "Log In",
+            "signUpLink": "Sign Up",
+            "forgotPasswordBtn": "Forgot Password?",
+            "googleLoginBtn": "Continue with Google",
+            "appleLoginBtn": "Continue with Apple"
+        },
+        "registerScreen": {
+            "title": "Create Account",
+            "usernameLabel": "Username",
+            "emailLabel": "Email Address",
+            "passwordLabel": "Password",
+            "confirmPasswordLabel": "Confirm Password",
+            "createAccountButton": "Create Account",
+            "captchaChallenge": "I am not a robot"
+        }
+    },
+    "Profile": {
+        "navigation": {
+            "profileTab": "Profile"
+        },
+        "customization": {
+            "editProfileBtn": "Edit Profile",
+            "saveChangesBtn": "Save Changes",
+            "bioInput": "Bio",
+            "locationInput": "Location",
+            "favoriteGenresLabel": "Favorite Genres"
+        },
+        "tiers": {
+            "artistRoleLabel": "Artist",
+            "listenerRoleLabel": "Listener"
+        },
+        "assets": {
+            "avatarImage": "Avatar",
+            "coverPhoto": "Cover Photo"
+        },
+        "social": {
+            "instagramLinkBtn": "Link Instagram",
+            "twitterLinkBtn": "Link Twitter",
+            "websiteLinkBtn": "Link Website"
+        },
+        "privacy": {
+            "privacySettingsBtn": "Privacy Settings",
+            "privateProfileToggle": "Private Profile"
+        },
+        "settings": {
+            "signOutBtn": "Sign Out"
+        }
+    }
+}
