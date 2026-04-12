@@ -97,7 +97,13 @@ This E2E suite is organized by project module to keep ownership, traceability, a
     - playback-surface/TC01-waveform-or-seekbar-visible.spec.js
     - playback-surface/TC02-track-stream-readiness.spec.js
     - support/module4-soundcloud.helper.js
-  - module-05-playback/soundcloud-playback.benchmark.spec.js
+  - module-05-playback
+    - streaming-controls/TC01-core-playback-controls-visible.spec.js
+    - streaming-controls/TC02-play-action-yields-playback-state.spec.js
+    - accessibility/TC01-playback-accessibility-handled.spec.js
+    - history-signals/TC01-playback-history-signals.spec.js
+    - responsive-player/TC01-sticky-player-visible-after-scroll.spec.js
+    - support/module5-soundcloud.helper.js
   - module-06-engagement/soundcloud-engagement.benchmark.spec.js
   - support/soundcloud.helper.js
 - support
