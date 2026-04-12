@@ -53,6 +53,11 @@ This E2E suite is organized by project module to keep ownership, traceability, a
   - playback.smoke.spec.js
 - modules/module-06-engagement
   - engagement.smoke.spec.js
+- benchmark/soundcloud
+  - module-04-tracks/soundcloud-tracks.benchmark.spec.js
+  - module-05-playback/soundcloud-playback.benchmark.spec.js
+  - module-06-engagement/soundcloud-engagement.benchmark.spec.js
+  - support/soundcloud.helper.js
 - support
   - selectors.js
   - helpers/auth.helper.js
@@ -73,6 +78,8 @@ Run examples:
 - npm run test:e2e:m1-m3:chromium
 - npm run test:e2e:m4-m6:chromium
 - npm run test:e2e:m1-m6
+- npm run test:e2e:sc:m4-m6
+- npm run test:e2e:sc:m4-m6:headed
 
 Manual GUI walkthrough for TA demos:
 
@@ -86,6 +93,7 @@ Environment strategy note:
 
 - Use Pulsify deployment as the pass/fail gate for modules 1 to 6.
 - SoundCloud can be used as external benchmarking reference only, not as acceptance criteria for Pulsify modules.
+- SoundCloud benchmark specs are isolated under e2e/benchmark/soundcloud to avoid mixing external results with Pulsify acceptance reports.
 
 ## Blackbox Principles Used
 
