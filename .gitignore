@@ -125,6 +125,19 @@ tmp/
 temp/
 *.tmp
 
+<<<<<<< HEAD
+# -----------------------------------------------------------------------------
+# Node Modules & WebdriverIO
+# -----------------------------------------------------------------------------
+node_modules/
+mobile-e2e/node_modules/
+mobile-e2e/package-lock.json
+mobile-e2e/allure-results/
+mobile-e2e/allure-report/
+mobile-e2e/.wdio/
+mobile-e2e/appium-logs/
+wdio-logs/
+=======
 # Playwright
 node_modules/
 /test-results/
@@ -158,3 +171,4 @@ e2e/node_modules/
 e2e/.env
 e2e/.env.*
 !e2e/.env.example
+>>>>>>> origin/main
