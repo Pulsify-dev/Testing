@@ -6,20 +6,26 @@ const WAIT = {
 };
 
 async function tap(locator, waitTimeout = WAIT.medium) {
+    let lastError;
     try {
         await browser.execute('flutter:waitFor', locator, waitTimeout);
         await browser.execute('flutter:clickElement', locator, { timeout: waitTimeout });
+        return;
     } catch (e) {
+        lastError = e;
         if (e.message.includes('Timeout') || e.message.includes('Future not completed')) {
             await browser.pause(500);
             try {
                 await browser.execute('flutter:clickElement', locator, { timeout: waitTimeout });
                 return;
-            } catch (_) {
+            } catch (retryError) {
+                lastError = retryError;
             }
         }
-        await browser.elementClick(locator);
     }
+
+    // Let callers (e.g., tapFirstAvailable) continue with fallback locators.
+    throw lastError || new Error('Tap failed for locator.');
 }
 
 function fieldByHint(hintText) {
