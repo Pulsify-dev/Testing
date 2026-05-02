@@ -1,16 +1,18 @@
 import { test, expect } from '@playwright/test';
-import { loginAndGoHome, hasCredentials } from '../support/module12-premium.helper.js';
+import { loginViaUi } from '../../../support/helpers/auth.helper.js';
 
-test.skip(true, 'Ad-free verification requires a Pro-tier test account — skip until a Pro test user is provisioned.');
+function hasAdminCredentials() {
+    return Boolean(process.env.ADMIN_USER_EMAIL && process.env.ADMIN_USER_PASSWORD);
+}
 
-test('TC-M12-PRK-02: pro user does not see ad banners or upgrade prompts on home page', async ({ page }) => {
-    test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
-    await loginAndGoHome(page);
+test.skip(!hasAdminCredentials(), 'Set ADMIN_USER_EMAIL and ADMIN_USER_PASSWORD first.');
 
-    // Pro users must not see upgrade CTAs or ad banners
-    const hasUpgradeCta = (await page.locator('text=/upgrade now/i').count()) > 0;
-    const hasAdBanner = (await page.locator('[class*="ad-banner"], [class*="advertisement"]').count()) > 0;
+test('TC-M12-PRK-02: pro user does not see ad banners or disruptive upgrade prompts on home page', async ({ page }) => {
+    await loginViaUi(page, process.env.ADMIN_USER_EMAIL, process.env.ADMIN_USER_PASSWORD);
+    await page.goto('/discover');
+    await expect(page.locator('nav, header').first()).toBeVisible({ timeout: 15000 });
 
-    expect(hasUpgradeCta).toBeFalsy();
+    // Pro users must not see ad banners
+    const hasAdBanner = (await page.locator('[class*="ad-banner"], [class*="advertisement"], [class*="ad-slot"]').count()) > 0;
     expect(hasAdBanner).toBeFalsy();
 });

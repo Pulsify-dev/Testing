@@ -1,18 +1,21 @@
 import { test, expect } from '@playwright/test';
-import { loginAndOpenUpload, premiumLocators, hasCredentials } from '../support/module12-premium.helper.js';
+import { loginViaUi } from '../../../support/helpers/auth.helper.js';
 
-test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
+function hasAdminCredentials() {
+    return Boolean(process.env.ADMIN_USER_EMAIL && process.env.ADMIN_USER_PASSWORD);
+}
 
-test('TC-M12-PAY-02: free user sees upload limit messaging on the upload page', async ({ page }) => {
-    await loginAndOpenUpload(page);
-    const locators = premiumLocators(page);
+test.skip(!hasAdminCredentials(), 'Set ADMIN_USER_EMAIL and ADMIN_USER_PASSWORD first.');
 
-    await expect(page.locator('nav, header').first()).toBeVisible({ timeout: 15000 });
+test('TC-M12-PAY-02: free user who reached upload limit sees paywall on the upload page', async ({ page }) => {
+    // Use admin account — it is a free-tier user that has hit the 10-track limit
+    await loginViaUi(page, process.env.ADMIN_USER_EMAIL, process.env.ADMIN_USER_PASSWORD);
+    await page.goto('/upload');
+    await page.waitForTimeout(2000);
 
-    // Upload limit indicator or a paywall gate must be present — either is acceptable
-    const hasLimitMsg = (await locators.uploadLimitMsg.count()) > 0;
-    const hasPaywall = (await locators.paywallGate.count()) > 0;
-    const hasUpgradePrompt = (await locators.upgradeBtn.count()) > 0;
+    // "Upload Limit Reached" card must appear — exact text from the app
+    await expect(page.locator('text=/Upload Limit Reached/i').first()).toBeVisible({ timeout: 10000 });
 
-    expect(hasLimitMsg || hasPaywall || hasUpgradePrompt).toBeTruthy();
+    // Must offer an upgrade path
+    await expect(page.locator('text=/Upgrade to Artist Pro/i').first()).toBeVisible({ timeout: 5000 });
 });

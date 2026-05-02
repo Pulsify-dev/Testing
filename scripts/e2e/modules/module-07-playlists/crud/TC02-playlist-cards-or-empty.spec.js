@@ -1,17 +1,18 @@
 import { test, expect } from '@playwright/test';
-import { loginAndOpenPlaylists, playlistPageLocators, hasCredentials } from '../support/module7-playlists.helper.js';
+import { loginAndOpenArtistStudio, openAddToPlaylistPanel, hasCredentials } from '../support/module7-playlists.helper.js';
 
-test.skip(true, 'Module 7 (Playlists) is not yet integrated — playlist content cannot be verified.');
+test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
 
-test('TC-M7-CRU-02: playlists page shows cards or empty state (handled)', async ({ page }) => {
-    test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
-    await loginAndOpenPlaylists(page);
-    const locators = playlistPageLocators(page);
+test('TC-M7-CRU-02: Add to playlist panel shows existing playlists or Create playlist option', async ({ page }) => {
+    await loginAndOpenArtistStudio(page);
+    await openAddToPlaylistPanel(page);
 
-    await expect(page.locator('.app-shell').first()).toBeVisible({ timeout: 15000 });
+    // Panel heading must appear
+    await expect(page.locator('text=Add to playlist').first()).toBeVisible({ timeout: 5000 });
 
-    // Must show either playlist cards or an explicit empty state message — not a generic error
-    const hasCards = (await locators.playlistCard.count()) > 0;
-    const hasEmpty = (await page.locator('text=/no playlist|empty|create/i').count()) > 0;
-    expect(hasCards || hasEmpty).toBeTruthy();
+    // Must show either existing playlist entries OR the "Create playlist" button (empty state)
+    const hasExisting = (await page.locator('text=Add to playlist').count()) > 1;
+    const hasCreateOption = (await page.locator('text=Create playlist').count()) > 0;
+
+    expect(hasExisting || hasCreateOption).toBeTruthy();
 });

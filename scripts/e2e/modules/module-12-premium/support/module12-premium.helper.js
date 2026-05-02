@@ -17,7 +17,7 @@ export function hasCredentials() {
 export async function loginAndGoHome(page) {
     const { testUserEmail, testUserPassword } = module12Env();
     await loginViaUi(page, testUserEmail, testUserPassword);
-    await page.goto('/home');
+    await page.goto('/discover');
     await expect(page.locator('nav, header').first()).toBeVisible({ timeout: 15000 });
 }
 

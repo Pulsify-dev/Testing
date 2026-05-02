@@ -1,13 +1,20 @@
 import { test, expect } from '@playwright/test';
-import { loginAndOpenPlaylists, hasCredentials } from '../support/module7-playlists.helper.js';
+import { loginAndOpenArtistStudio, hasCredentials } from '../support/module7-playlists.helper.js';
 
-test.skip(true, 'Module 7 (Playlists) is not yet integrated — route returns 401 for all users.');
+test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
 
-test('TC-M7-CRU-01: /playlists route renders without crashing', async ({ page }) => {
-    test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
-    await loginAndOpenPlaylists(page);
-    const shell = page.locator('.app-shell');
-    await expect(shell.first()).toBeVisible({ timeout: 15000 });
-    // Assert the route did NOT return a generic error
-    await expect(page.locator('text=/request failed|401|unauthorized/i')).toHaveCount(0, { timeout: 5000 });
+test('TC-M7-CRU-01: Artist Studio at /my-tracks renders with track list', async ({ page }) => {
+    await loginAndOpenArtistStudio(page);
+
+    // Heading confirmed in screenshots
+    await expect(page.locator('text=Artist Studio').first()).toBeVisible({ timeout: 15000 });
+
+    // Action bar buttons always visible when tracks exist
+    await expect(page.locator('text=Upload or drop tracks').first()).toBeVisible({ timeout: 10000 });
+
+    // Filter controls (All / Public / Private) confirm the list rendered
+    await expect(page.locator('button, [role="button"]').filter({ hasText: /^All$/ }).first()).toBeVisible({ timeout: 10000 });
+
+    // Page must not show an error
+    await expect(page.locator('text=/401|request failed|something went wrong/i')).toHaveCount(0);
 });

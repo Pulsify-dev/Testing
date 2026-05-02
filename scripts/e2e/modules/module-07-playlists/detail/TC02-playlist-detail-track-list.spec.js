@@ -1,28 +1,34 @@
 import { test, expect } from '@playwright/test';
-import { hasCredentials, module7Env } from '../support/module7-playlists.helper.js';
-import { loginViaUi } from '../../../support/helpers/auth.helper.js';
+import { loginAndOpenArtistStudio, openAddToPlaylistPanel, playlistLocators, hasCredentials } from '../support/module7-playlists.helper.js';
 
-test.skip(true, 'Module 7 (Playlists) is not yet integrated — detail track list cannot be verified.');
+test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
 
-test('TC-M7-DET-02: playlist detail page renders track list or empty state', async ({ page }) => {
-    test.skip(!hasCredentials(), 'Set TEST_USER_EMAIL and TEST_USER_PASSWORD first.');
-    const { testUserEmail, testUserPassword } = module7Env();
-    await loginViaUi(page, testUserEmail, testUserPassword);
-    await page.goto('/playlists');
+test('TC-M7-DET-02: creating a new playlist and adding a track shows success confirmation', async ({ page }) => {
+    await loginAndOpenArtistStudio(page);
 
-    await expect(page.locator('.app-shell').first()).toBeVisible({ timeout: 15000 });
+    // Register dialog handler BEFORE triggering the action that causes it
+    let dialogMessage = '';
+    page.on('dialog', async dlg => {
+        dialogMessage = dlg.message();
+        await dlg.accept();
+    });
 
-    const cardLink = page.locator('.pulsify-card-name').first();
-    await expect(cardLink).toBeVisible({ timeout: 10000 });
+    await openAddToPlaylistPanel(page);
 
-    const href = await cardLink.getAttribute('href');
-    expect(href).toBeTruthy();
-    await page.goto(href);
+    const locators = playlistLocators(page);
+    await expect(locators.createPlaylistBtn).toBeVisible({ timeout: 5000 });
+    await locators.createPlaylistBtn.click();
+    await page.waitForTimeout(800);
 
-    await expect(page.locator('.app-shell').first()).toBeVisible({ timeout: 15000 });
+    // Fill in the required playlist title ("Playlist title *" label, input has no placeholder)
+    const titleInput = page.locator('text=/Playlist title/i').locator('xpath=following::input[1]');
+    await expect(titleInput).toBeVisible({ timeout: 5000 });
+    await titleInput.fill('E2E Test Playlist');
 
-    // Must show tracks or an explicit empty state — hasShell alone is not sufficient
-    const hasTracks = (await page.locator('.pulsify-card-track-entry').count()) > 0;
-    const hasEmpty = (await page.locator('text=/no track|empty playlist/i').count()) > 0;
-    expect(hasTracks || hasEmpty).toBeTruthy();
+    await expect(locators.saveBtn).toBeVisible({ timeout: 5000 });
+    await locators.saveBtn.click();
+    await page.waitForTimeout(2000);
+
+    // Success: browser alert says "Playlist created and track added!"
+    expect(dialogMessage).toMatch(/Playlist created and track added/i);
 });
