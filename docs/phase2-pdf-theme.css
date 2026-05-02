@@ -1,0 +1,158 @@
+@page {
+  size: A4;
+  margin: 18mm 13mm 16mm 13mm;
+}
+
+html,
+body {
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: 11pt;
+  color: #111111;
+  line-height: 1.4;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Times New Roman", Georgia, serif;
+  color: #123b68;
+  page-break-after: avoid;
+}
+
+h1 {
+  font-size: 24pt;
+  margin: 0.2rem 0 0.7rem;
+}
+
+h2 {
+  font-size: 15pt;
+  margin-top: 1.3rem;
+  margin-bottom: 0.45rem;
+  border-left: 4px solid #123b68;
+  padding-left: 0.55rem;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 12.5pt;
+  margin-top: 0.9rem;
+  margin-bottom: 0.35rem;
+  page-break-after: avoid;
+}
+
+hr {
+  border: 0;
+  border-top: 2px solid #123b68;
+  margin: 0.9rem 0;
+}
+
+p,
+ul,
+ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+
+li {
+  margin-bottom: 0.2rem;
+}
+
+a {
+  color: #123b68;
+  text-decoration: none;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.55rem 0 0.95rem;
+  font-size: 10.2pt;
+  page-break-inside: auto;
+}
+
+thead th,
+tr:first-child th {
+  background: #123b68;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+th,
+td {
+  border: 1px solid #6a7d95;
+  padding: 6px 7px;
+  vertical-align: top;
+  page-break-inside: avoid;
+}
+
+thead {
+  display: table-header-group;
+}
+
+tfoot {
+  display: table-row-group;
+}
+
+tr:nth-child(even) td {
+  background: #f2f6fb;
+}
+
+code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 9.8pt;
+  background: #eef2f8;
+  border: 1px solid #d3dcea;
+  padding: 0 4px;
+}
+
+.cover-page {
+  min-height: 248mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-top {
+  font-size: 14pt;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.cover-course {
+  margin-top: 1.35rem;
+  font-size: 13pt;
+  font-weight: 700;
+  color: #123b68;
+}
+
+.cover-title {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 28pt;
+  line-height: 1.15;
+  color: #123b68;
+  border-bottom: 3px solid #123b68;
+  padding-bottom: 0.5rem;
+}
+
+.cover-subtitle {
+  margin-top: 0.3rem;
+  font-size: 12pt;
+}
+
+.cover-authors {
+  margin-top: 1.5rem;
+  font-size: 12pt;
+}
+
+.cover-date {
+  margin-top: 0.9rem;
+  font-size: 11.5pt;
+}
+
+.page-break {
+  page-break-after: always;
+}

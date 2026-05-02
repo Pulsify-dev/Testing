@@ -1,0 +1,18 @@
+{
+  "stylesheet": [
+    "docs/phase2-pdf-theme.css"
+  ],
+  "pdf_options": {
+    "format": "A4",
+    "printBackground": true,
+    "displayHeaderFooter": true,
+    "headerTemplate": "<div></div>",
+    "footerTemplate": "<div style='width:100%;font-size:9px;color:#4a4a4a;text-align:center;padding:0 8px;'>Phase 3 Testing Report - Pulsify | Mahmoud Attia & QA Team | Page <span class='pageNumber'></span> of <span class='totalPages'></span></div>",
+    "margin": {
+      "top": "18mm",
+      "bottom": "16mm",
+      "left": "12mm",
+      "right": "12mm"
+    }
+  }
+}
