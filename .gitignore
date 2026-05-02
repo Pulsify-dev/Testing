@@ -2,16 +2,12 @@
 Thumbs.db
 *.log
 node_modules/
-
-# Reorganized structure
-scripts/
 docs/
-
 coverage/
 playwright-report/
 test-results/
 blob-report/
-
+scripts/scripts/
 mobile-e2e/node_modules/
 mobile-e2e/allure-results/
 mobile-e2e/allure-report/
