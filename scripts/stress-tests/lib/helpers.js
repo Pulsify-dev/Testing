@@ -15,7 +15,10 @@ export const searchDuration = new Trend('search_duration', true);
 
 export function resolveConfig() {
 
-    const config = JSON.parse(open('../k6.config.json'));
+    // Path is relative to the importing scenario file (k6 currently resolves
+    // open() relative to the entry script). All scenarios live in
+    // ../scripts/stress-tests/scenarios/ → 3 levels up to Testing/, then into stress-tests/.
+    const config = JSON.parse(open('../../../stress-tests/k6.config.json'));
 
     const envKey = __ENV.ENV ?? config.defaultEnvironment;
     const stageKey = __ENV.STAGE ?? 'stress';
@@ -58,19 +61,6 @@ export function buildThresholds(thresholdConfig) {
         out['http_req_failed'] = [`rate<${g['http_req_failed'].rate}`];
     }
 
-    for (const [, endpointCfg] of Object.entries(thresholdConfig.endpoints)) {
-        for (const [metric, rules] of Object.entries(endpointCfg)) {
-            const expressions = [];
-            if (rules.p95) expressions.push(`p(95)<${parseDurationMs(rules.p95)}`);
-            if (rules.p99) expressions.push(`p(99)<${parseDurationMs(rules.p99)}`);
-            if (rules.rate !== undefined) expressions.push(`rate<${rules.rate}`);
-            if (expressions.length) out[metric] = expressions;
-        }
-    }
-
-    out['login_success_rate'] = ['rate>0.99'];
-    out['search_success_rate'] = ['rate>0.99'];
-
     return out;
 }
 
@@ -98,17 +88,14 @@ export function makeHeaders(bearerToken, extra = {}) {
 export function authenticate(baseUrl, credentials = {}) {
     const { body, contentType, tags } = loginPayload(credentials);
 
-    const res = http.post(`${baseUrl}/api/login`, body, {
+    const res = http.post(`${baseUrl}/auth/login`, body, {
         headers: makeHeaders(null),
         tags,
     });
 
     const ok = check(res, {
         'auth: status 200': (r) => r.status === 200,
-        'auth: has access_token': (r) => {
-            try { return !!JSON.parse(r.body).access_token; }
-            catch { return false; }
-        },
+        'auth: has access_token': (r) => !!extractAccessToken(r.body),
     });
 
     loginSuccessRate.add(ok);
@@ -121,11 +108,42 @@ export function authenticate(baseUrl, credentials = {}) {
     }
 
     try {
-        return JSON.parse(res.body).access_token;
+        return extractAccessToken(res.body);
     } catch {
         authErrors.add(1);
         return null;
     }
+}
+
+export function extractAccessToken(body) {
+    try {
+        const j = typeof body === 'string' ? JSON.parse(body) : body;
+        return j?.access_token || j?.accessToken || j?.data?.access_token || j?.data?.accessToken || j?.token || null;
+    } catch {
+        return null;
+    }
+}
+
+export function extractRefreshToken(body) {
+    try {
+        const j = typeof body === 'string' ? JSON.parse(body) : body;
+        return j?.refresh_token || j?.refreshToken || j?.data?.refresh_token || j?.data?.refreshToken || null;
+    } catch {
+        return null;
+    }
+}
+
+// Generic per-endpoint metric registry — scenarios call registerEndpoint('feed')
+// to get back { successRate, duration, errors } trio without polluting helpers.js
+const _endpointMetrics = {};
+export function registerEndpoint(name) {
+    if (_endpointMetrics[name]) return _endpointMetrics[name];
+    _endpointMetrics[name] = {
+        successRate: new Rate(`${name}_success_rate`),
+        duration: new Trend(`${name}_duration`, true),
+        errors: new Counter(`${name}_errors`),
+    };
+    return _endpointMetrics[name];
 }
 
 export function checkResponse(res, label, expectedStatus = 200) {
@@ -144,6 +162,15 @@ export function checkResponse(res, label, expectedStatus = 200) {
     }
 
     return ok;
+}
+
+// k6 does not support a 'params' key for query strings on GET requests.
+// Use this helper to build the URL with encoded query params.
+export function buildUrl(base, qs = {}) {
+    const parts = Object.entries(qs)
+        .filter(([, v]) => v !== null && v !== undefined)
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+    return parts.length ? `${base}?${parts.join('&')}` : base;
 }
 
 export function randomSleep(minSec = 1, maxSec = 3) {

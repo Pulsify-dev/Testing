@@ -5,15 +5,15 @@
 
   "environments": {
     "local": {
-      "baseUrl": "http://localhost:4000",
+      "baseUrl": "http://localhost:3000/api/v1",
       "description": "Local development server"
     },
     "staging": {
-      "baseUrl": "https://api.staging.pulsify.dev",
-      "description": "Staging environment (default for stress tests)"
+      "baseUrl": "https://pulsify.page/api/v1",
+      "description": "Deployed VM — primary stress test target"
     },
     "production": {
-      "baseUrl": "https://api.pulsify.dev",
+      "baseUrl": "https://pulsify.page/api/v1",
       "description": "Production — only run with explicit approval"
     }
   },

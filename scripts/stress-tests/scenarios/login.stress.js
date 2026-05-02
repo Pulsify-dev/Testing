@@ -3,7 +3,18 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
-import { resolveConfig, makeHeaders, checkResponse, randomSleep, loginSuccessRate, loginDuration, authErrors, logSummary } from '../lib/helpers.js';
+import {
+    resolveConfig,
+    makeHeaders,
+    checkResponse,
+    randomSleep,
+    loginSuccessRate,
+    loginDuration,
+    authErrors,
+    logSummary,
+    extractAccessToken,
+    extractRefreshToken,
+} from '../lib/helpers.js';
 import { loginPayload, logoutPayload } from '../lib/payloads.js';
 
 const cfg = resolveConfig();
@@ -24,8 +35,6 @@ export const options = {
     insecureSkipTLSVerify: cfg.options.insecureSkipTLSVerify,
     discardResponseBodies: false,
     summaryTrendStats: cfg.options.summaryTrendStats,
-    gracefulRampDown: cfg.options.gracefulRampDown,
-    gracefulStop: cfg.options.gracefulStop,
 
     tags: {
         scenario: 'login',
@@ -65,35 +74,35 @@ export default function loginScenario(data) {
         timeout: '15s',
     };
 
-    const res = http.post(`${baseUrl}/api/login`, body, params);
+    const res = http.post(`${baseUrl}/auth/login`, body, params);
 
-    const hasToken = (() => {
-        try { return !!JSON.parse(res.body).access_token; }
-        catch { return false; }
-    })();
+    const accessToken = extractAccessToken(res.body);
+    const refreshToken = extractRefreshToken(res.body);
+    const hasToken = !!accessToken;
 
-    const ok = check(res, {
+    const success = check(res, {
         'login: status 200': (r) => r.status === 200,
         'login: has access_token': () => hasToken,
-        'login: response < 800ms': (r) => r.timings.duration < 800,
         'login: content-type json': (r) =>
             (r.headers['Content-Type'] ?? '').includes('application/json'),
     });
+    const perfOk = check(res, {
+        'login: response < 800ms': (r) => r.timings.duration < 800,
+    });
 
-    loginSuccessRate.add(ok);
+    loginSuccessRate.add(success);
     loginDuration.add(res.timings.duration, tags);
 
-    if (!ok) {
+    if (!success || !perfOk) {
         authErrors.add(1);
         checkResponse(res, 'login', 200);
     }
 
-    if (hasToken && Math.random() > 0.7) {
-        const token = JSON.parse(res.body).access_token;
-        const { body: logoutBody, tags: logoutTags } = logoutPayload(token);
+    if ((__ENV.K6_ENABLE_LOGOUT_TRAFFIC ?? '0') === '1' && refreshToken && Math.random() > 0.7) {
+        const { body: logoutBody, tags: logoutTags } = logoutPayload(refreshToken);
 
-        const logoutRes = http.post(`${baseUrl}/api/logout`, logoutBody, {
-            headers: makeHeaders(token),
+        const logoutRes = http.post(`${baseUrl}/auth/logout`, logoutBody, {
+            headers: makeHeaders(accessToken),
             tags: logoutTags,
             timeout: '10s',
         });

@@ -7,8 +7,11 @@ import {
     resolveConfig,
     authenticate,
     makeHeaders,
+    buildUrl,
     checkResponse,
     randomSleep,
+    extractAccessToken,
+    extractRefreshToken,
     loginSuccessRate,
     loginDuration,
     authErrors,
@@ -17,8 +20,7 @@ import {
     searchErrors,
     logSummary,
 } from '../lib/helpers.js';
-import { loginPayload, searchPayload, logoutPayload } from '../lib/payloads.js';
-import { randomIntBetween } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
+import { loginPayload, searchQueryParams, logoutPayload } from '../lib/payloads.js';
 
 const cfg = resolveConfig();
 
@@ -35,7 +37,6 @@ export const options = {
             stages: cfg.stages,
             gracefulRampDown: cfg.options.gracefulRampDown,
             gracefulStop: cfg.options.gracefulStop,
-            maxVUs: loginVUs,
             exec: 'loginScenario',
             tags: { scenario: 'login' },
         },
@@ -51,7 +52,6 @@ export const options = {
             })),
             gracefulRampDown: cfg.options.gracefulRampDown,
             gracefulStop: cfg.options.gracefulStop,
-            maxVUs: searchVUs,
             exec: 'searchScenario',
             tags: { scenario: 'search' },
         },
@@ -98,32 +98,32 @@ export function loginScenario(data) {
     const { baseUrl } = data;
 
     const { body, tags } = loginPayload();
-    const res = http.post(`${baseUrl}/api/login`, body, {
+    const res = http.post(`${baseUrl}/auth/login`, body, {
         headers: makeHeaders(null),
         tags,
         timeout: '15s',
     });
 
-    const hasToken = (() => {
-        try { return !!JSON.parse(res.body).access_token; }
-        catch { return false; }
-    })();
+    const accessToken = extractAccessToken(res.body);
+    const refreshToken = extractRefreshToken(res.body);
+    const hasToken = !!accessToken;
 
-    const ok = check(res, {
+    const success = check(res, {
         'login: status 200': (r) => r.status === 200,
         'login: has access_token': () => hasToken,
+    });
+    const perfOk = check(res, {
         'login: response < 800ms': (r) => r.timings.duration < 800,
     });
 
-    loginSuccessRate.add(ok);
+    loginSuccessRate.add(success);
     loginDuration.add(res.timings.duration, tags);
-    if (!ok) authErrors.add(1);
+    if (!success || !perfOk) authErrors.add(1);
 
-    if (hasToken && Math.random() > 0.3) {
-        const token = JSON.parse(res.body).access_token;
-        const { body: lb, tags: lt } = logoutPayload(token);
-        http.post(`${baseUrl}/api/logout`, lb, {
-            headers: makeHeaders(token), tags: lt, timeout: '10s',
+    if ((__ENV.K6_ENABLE_LOGOUT_TRAFFIC ?? '0') === '1' && refreshToken && Math.random() > 0.3) {
+        const { body: lb, tags: lt } = logoutPayload(refreshToken);
+        http.post(`${baseUrl}/auth/logout`, lb, {
+            headers: makeHeaders(accessToken), tags: lt, timeout: '10s',
         });
     }
 
@@ -149,8 +149,9 @@ export function searchScenario(data) {
         }
     }
 
-    const { body, tags } = searchPayload();
-    const res = http.post(`${baseUrl}/api/search`, body, {
+    const { qs, tags } = searchQueryParams();
+    const url = buildUrl(`${baseUrl}/search`, qs);
+    const res = http.get(url, {
         headers: makeHeaders(_vuToken),
         tags,
         timeout: '20s',
@@ -168,7 +169,7 @@ export function searchScenario(data) {
     const hasResults = (() => {
         try {
             const j = JSON.parse(res.body);
-            return Array.isArray(j.results) || Array.isArray(j.data?.items) || typeof j.total === 'number';
+            return Array.isArray(j.data?.tracks);
         } catch { return false; }
     })();
 

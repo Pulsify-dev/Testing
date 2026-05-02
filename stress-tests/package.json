@@ -1,25 +1,38 @@
 {
   "name": "pulsify-stress-tests",
   "version": "1.0.0",
-  "description": "Pulsify K6 stress test suite — /api/login and /api/search",
+  "description": "Pulsify K6 stress test suite — full backend coverage (auth, search, feed, streaming, engagement, playlists, notifications, full-journey)",
   "private": true,
   "scripts": {
     "test:smoke": "k6 run --env STAGE=smoke      --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
-    "test:load": "k6 run --env STAGE=load       --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
-    "test:stress": "k6 run --env STAGE=stress     --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
+    "test:load":  "k6 run --env STAGE=load       --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
+    "test:stress": "k6 run --env STAGE=stress    --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
     "test:spike": "k6 run --env STAGE=spike      --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
-    "test:soak": "k6 run --env STAGE=soak       --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
-    "test:breakpoint": "k6 run --env STAGE=breakpoint --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
-    "test:login": "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/login.stress.js",
-    "test:search": "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/search.stress.js",
-    "test:local": "k6 run --env STAGE=smoke  --env ENV=local    ../scripts/stress-tests/scenarios/run-all.js",
-    "test:prod": "k6 run --env STAGE=load   --env ENV=production ../scripts/stress-tests/scenarios/run-all.js",
-    "report": "k6 run --out json=results/summary.json --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/run-all.js",
-    "report:html": "k6 run --out web-dashboard --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/run-all.js"
+    "test:soak":  "k6 run --env STAGE=soak       --env ENV=staging    ../scripts/stress-tests/scenarios/run-all.js",
+    "test:breakpoint": "k6 run --env STAGE=breakpoint --env ENV=staging ../scripts/stress-tests/scenarios/run-all.js",
+
+    "test:login":         "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/login.stress.js",
+    "test:search":        "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/search.stress.js",
+    "test:feed":          "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/feed.stress.js",
+    "test:streaming":     "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/streaming.stress.js",
+    "test:engagement":    "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/engagement.stress.js",
+    "test:playlists":     "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/playlists.stress.js",
+    "test:notifications": "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/notifications.stress.js",
+    "test:journey":       "k6 run --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/full-journey.stress.js",
+
+    "test:local":   "k6 run --env STAGE=smoke  --env ENV=local      ../scripts/stress-tests/scenarios/run-all.js",
+    "test:local:journey": "k6 run --env STAGE=smoke --env ENV=local ../scripts/stress-tests/scenarios/full-journey.stress.js",
+    "test:prod":    "k6 run --env STAGE=load   --env ENV=production ../scripts/stress-tests/scenarios/run-all.js",
+
+    "report":      "k6 run --out json=results/summary.json --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/run-all.js",
+    "report:html": "k6 run --out web-dashboard --env STAGE=stress --env ENV=staging ../scripts/stress-tests/scenarios/run-all.js",
+
+    "seed": "node ../scripts/stress-tests/seed/seed-stress-data.js"
   },
   "devDependencies": {},
   "engines": {
-    "k6": ">=0.50.0"
+    "k6": ">=0.50.0",
+    "node": ">=18"
   },
   "keywords": [
     "k6",
