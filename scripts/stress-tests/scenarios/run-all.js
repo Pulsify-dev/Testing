@@ -27,6 +27,8 @@ const cfg = resolveConfig();
 const maxVUsTotal = Math.max(...cfg.stages.map((s) => s.target));
 const loginVUs = Math.round(maxVUsTotal * 0.6);
 const searchVUs = Math.round(maxVUsTotal * 0.4);
+const loginStages = splitStages(cfg.stages, 0.6);
+const searchStages = splitStages(cfg.stages, 0.4);
 
 export const options = {
     scenarios: {
@@ -34,7 +36,7 @@ export const options = {
         login: {
             executor: 'ramping-vus',
             startVUs: 0,
-            stages: cfg.stages,
+            stages: loginStages,
             gracefulRampDown: cfg.options.gracefulRampDown,
             gracefulStop: cfg.options.gracefulStop,
             exec: 'loginScenario',
@@ -45,7 +47,7 @@ export const options = {
             executor: 'ramping-vus',
             startVUs: 0,
 
-            stages: cfg.stages.map((s, i) => ({
+            stages: searchStages.map((s, i) => ({
                 ...s,
 
                 duration: i === 0 ? addSeconds(s.duration, 15) : s.duration,
@@ -203,4 +205,11 @@ function addSeconds(duration, extraSeconds) {
         (unit === 's' ? 1 : unit === 'm' ? 60 : 3600) +
         extraSeconds;
     return `${totalSeconds}s`;
+}
+
+function splitStages(stages, share) {
+    return stages.map((stage) => ({
+        ...stage,
+        target: Math.max(0, Math.round(stage.target * share)),
+    }));
 }
