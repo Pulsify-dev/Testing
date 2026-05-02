@@ -8,7 +8,7 @@ import {
     registerEndpoint,
     logSummary,
 } from '../lib/helpers.js';
-import { likePayload, SEEDED_TRACK_IDS } from '../lib/payloads.js';
+import { likePayload, SEEDED_TRACK_IDS, TEST_USERS } from '../lib/payloads.js';
 
 const cfg = resolveConfig();
 const like = registerEndpoint('like');
@@ -36,8 +36,7 @@ export const options = {
 export function setup() {
     console.log(`[setup] engagement stress — env=${cfg.envKey} stage=${cfg.stageKey}`);
     console.log(`[setup] ${SEEDED_TRACK_IDS.length} pre-seeded track IDs available`);
-    const token = authenticate(cfg.baseUrl);
-    return { baseUrl: cfg.baseUrl, sharedToken: token, trackIds: SEEDED_TRACK_IDS };
+    return { baseUrl: cfg.baseUrl, trackIds: SEEDED_TRACK_IDS };
 }
 
 let _vuToken = null;
@@ -45,11 +44,12 @@ let _vuTokenAt = 0;
 const TOKEN_TTL = 55 * 60 * 1000;
 
 export default function engagementScenario(data) {
-    const { baseUrl, sharedToken, trackIds } = data;
+    const { baseUrl, trackIds } = data;
 
     const now = Date.now();
     if (!_vuToken || now - _vuTokenAt > TOKEN_TTL) {
-        _vuToken = sharedToken ?? authenticate(baseUrl);
+        const credentials = TEST_USERS[(__VU - 1) % TEST_USERS.length];
+        _vuToken = authenticate(baseUrl, credentials);
         _vuTokenAt = now;
     }
     if (!_vuToken) { randomSleep(1, 2); return; }
