@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulsify Phase 2 – E2E Testing Matrix Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e8;
+            padding: 40px;
+            line-height: 1.6;
+        }
+
+        @media print {
+            body { background: #fff; color: #1a1a2e; padding: 20px; }
+            .header { background: #1a1a2e !important; }
+            .summary-card { background: #f5f5f5 !important; border: 1px solid #ddd !important; }
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #7c3aed, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header .subtitle {
+            color: #8888aa;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .header .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .meta-item {
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .meta-item .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b6b8a;
+            margin-bottom: 4px;
+        }
+
+        .meta-item .value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #c0c0d4;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, rgba(30,30,50,0.9), rgba(25,25,45,0.9));
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .summary-card .number {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .summary-card .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8888aa;
+            margin-top: 8px;
+        }
+
+        .summary-card.total .number { color: #a78bfa; }
+        .summary-card.passed .number { color: #34d399; }
+        .summary-card.failed .number { color: #f87171; }
+        .summary-card.rate .number { color: #fbbf24; }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 32px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(167,139,250,0.3);
+            color: #c4b5fd;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+            font-size: 13px;
+        }
+
+        thead th {
+            background: rgba(167,139,250,0.15);
+            color: #c4b5fd;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 2px solid rgba(167,139,250,0.2);
+        }
+
+        tbody td {
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        tbody tr:hover { background: rgba(167,139,250,0.05); }
+
+        .module-row.pass { border-left: 3px solid #34d399; }
+        .module-row.fail { border-left: 3px solid #f87171; }
+
+        .status-pass { color: #34d399; font-weight: 600; }
+        .status-fail { color: #f87171; font-weight: 600; }
+        .status-passed { color: #34d399; font-weight: 500; }
+        .status-failed { color: #f87171; font-weight: 500; }
+        .status-skipped { color: #fbbf24; font-weight: 500; }
+
+        .pass-cell { color: #34d399; }
+        .fail-cell { color: #f87171; }
+
+        .error-cell {
+            font-size: 11px;
+            color: #f87171;
+            max-width: 300px;
+            word-break: break-word;
+            opacity: 0.85;
+        }
+
+        .test-row.passed .error-cell { color: #6b6b8a; }
+
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: #6b6b8a;
+            font-size: 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-pass { background: rgba(52,211,153,0.15); color: #34d399; }
+        .badge-fail { background: rgba(248,113,113,0.15); color: #f87171; }
+
+        .print-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .print-btn:hover { opacity: 0.9; }
+
+        @media print { .print-btn { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Pulsify – E2E Testing Matrix Report</h1>
+            <p class="subtitle">Phase 2: Modules 5–12 | Mobile Regression Suite</p>
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="label">Date</div>
+                    <div class="value">Saturday, May 2, 2026</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">Time</div>
+                    <div class="value">5:02:01 PM → 5:45:12 PM</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">Duration</div>
+                    <div class="value">43m 11s</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">Environment</div>
+                    <div class="value">Android Emulator · Appium 3.2.2</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">Runner</div>
+                    <div class="value">WebdriverIO + Appium-Flutter-Driver</div>
+                </div>
+                <div class="meta-item">
+                    <div class="label">Test User</div>
+                    <div class="value">test@example.com</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card total">
+                <div class="number">34</div>
+                <div class="label">Total Tests</div>
+            </div>
+            <div class="summary-card passed">
+                <div class="number">1</div>
+                <div class="label">Passed</div>
+            </div>
+            <div class="summary-card failed">
+                <div class="number">33</div>
+                <div class="label">Failed</div>
+            </div>
+            <div class="summary-card rate">
+                <div class="number">2.9%</div>
+                <div class="label">Pass Rate</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Module Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Module</th>
+                    <th>Total</th>
+                    <th>Pass</th>
+                    <th>Fail</th>
+                    <th>Skip</th>
+                    <th>Rate</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr class="module-row fail">
+                    <td>1</td>
+                    <td>MODULE 5: Track Playback</td>
+                    <td>5</td>
+                    <td class="pass-cell">0</td>
+                    <td class="fail-cell">5</td>
+                    <td>0</td>
+                    <td>0%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+                <tr class="module-row fail">
+                    <td>2</td>
+                    <td>MODULE 6: Engagement — Likes & Comments</td>
+                    <td>5</td>
+                    <td class="pass-cell">0</td>
+                    <td class="fail-cell">5</td>
+                    <td>0</td>
+                    <td>0%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+                <tr class="module-row fail">
+                    <td>3</td>
+                    <td>MODULE 7: Playlists  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                    <td>4</td>
+                    <td class="pass-cell">0</td>
+                    <td class="fail-cell">4</td>
+                    <td>0</td>
+                    <td>0%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+                <tr class="module-row fail">
+                    <td>4</td>
+                    <td>MODULE 8: Discovery & Search</td>
+                    <td>5</td>
+                    <td class="pass-cell">1</td>
+                    <td class="fail-cell">4</td>
+                    <td>0</td>
+                    <td>20%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+                <tr class="module-row fail">
+                    <td>5</td>
+                    <td>MODULE 9: Messaging</td>
+                    <td>4</td>
+                    <td class="pass-cell">0</td>
+                    <td class="fail-cell">4</td>
+                    <td>0</td>
+                    <td>0%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+                <tr class="module-row fail">
+                    <td>6</td>
+                    <td>MODULE 10: Notifications</td>
+                    <td>4</td>
+                    <td class="pass-cell">0</td>
+                    <td class="fail-cell">4</td>
+                    <td>0</td>
+                    <td>0%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+                <tr class="module-row fail">
+                    <td>7</td>
+                    <td>MODULE 11: Moderation  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                    <td>3</td>
+                    <td class="pass-cell">0</td>
+                    <td class="fail-cell">3</td>
+                    <td>0</td>
+                    <td>0%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+                <tr class="module-row fail">
+                    <td>8</td>
+                    <td>MODULE 12: Subscription  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                    <td>4</td>
+                    <td class="pass-cell">0</td>
+                    <td class="fail-cell">4</td>
+                    <td>0</td>
+                    <td>0%</td>
+                    <td class="status-fail">❌ FAIL</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-title">Detailed Test Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Test Case</th>
+                    <th>Result</th>
+                    <th>Duration</th>
+                    <th>Failure Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                    <tr class="test-row failed">
+                        <td>MODULE 5: Track Playback</td>
+                        <td>TC-PLAY-001 | should display seeded tracks in the home feed</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 0s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 5: Track Playback</td>
+                        <td>TC-PLAY-002 | should open the player when a track is tapped</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 2s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 5: Track Playback</td>
+                        <td>TC-PLAY-003 | should expose play/pause controls in the player</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 3s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 5: Track Playback</td>
+                        <td>TC-PLAY-004 | should display player UI elements</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 9s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 5: Track Playback</td>
+                        <td>TC-PLAY-005 (Negative) | should handle playback gracefully when audio URL is missing</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 6s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 6: Engagement — Likes & Comments</td>
+                        <td>TC-ENG-001 | should like a track from the player or feed</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 17s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 6: Engagement — Likes & Comments</td>
+                        <td>TC-ENG-002 | should toggle like off (unlike) a track</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 22s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 6: Engagement — Likes & Comments</td>
+                        <td>TC-ENG-003 | should open the comments section for a track</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 26s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 6: Engagement — Likes & Comments</td>
+                        <td>TC-ENG-004 | should post a comment on a track</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 7s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 6: Engagement — Likes & Comments</td>
+                        <td>TC-ENG-005 (Negative) | should reject posting an empty comment</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 13s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 7: Playlists  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-PL-001 | should navigate to the Playlists screen</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 20s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 7: Playlists  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-PL-002 | should create a new playlist</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 32s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 7: Playlists  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-PL-003 | should add a track to a playlist</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 42s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 7: Playlists  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-PL-004 (Negative) | should reject creating a playlist with an empty name</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 17s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row passed">
+                        <td>MODULE 8: Discovery & Search</td>
+                        <td>TC-DISC-001 | should navigate to the Discover / Search screen</td>
+                        <td class="status-passed">✅ PASSED</td>
+                        <td>50.2s</td>
+                        <td class="error-cell">—</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 8: Discovery & Search</td>
+                        <td>TC-DISC-002 | should return results when searching for a seeded artist</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 19s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 8: Discovery & Search</td>
+                        <td>TC-DISC-003 | should open the artist profile from search results</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 10s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 8: Discovery & Search</td>
+                        <td>TC-DISC-004 | should follow the seeded artist from their profile</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 20s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 8: Discovery & Search</td>
+                        <td>TC-DISC-005 (Negative) | should show empty-state when searching a non-existent term</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 13s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 9: Messaging</td>
+                        <td>TC-MSG-001 | should navigate to the Messages / Inbox screen</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 15s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 9: Messaging</td>
+                        <td>TC-MSG-002 | should open a new conversation with the seeded artist</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 16s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 9: Messaging</td>
+                        <td>TC-MSG-003 | should send a message in the conversation</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 12s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 9: Messaging</td>
+                        <td>TC-MSG-004 (Negative) | should reject sending an empty message</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>55.5s</td>
+                        <td class="error-cell">Message input not available. This test depends on TC-MSG-002.</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 10: Notifications</td>
+                        <td>TC-NOTIF-001 | should navigate to the Notifications screen</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 6s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 10: Notifications</td>
+                        <td>TC-NOTIF-002 | should display at least one notification from prior interactions</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 6s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 10: Notifications</td>
+                        <td>TC-NOTIF-003 | should navigate to the correct screen when tapping a notification</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 9s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 10: Notifications</td>
+                        <td>TC-NOTIF-004 | should mark notifications as read</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 12s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 11: Moderation  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-MOD-001 | should report a track as inappropriate</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 13s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 11: Moderation  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-MOD-002 | should block a user from their profile</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 20s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 11: Moderation  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-MOD-003 (Negative) | should prevent reporting the same track twice</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 28s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 12: Subscription  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-SUB-001 | should navigate to the Subscription / Plans screen</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 25s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 12: Subscription  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-SUB-002 | should display subscription plan options</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 30s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 12: Subscription  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-SUB-003 | should initiate the subscribe flow for a paid plan</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 19s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+                    <tr class="test-row failed">
+                        <td>MODULE 12: Subscription  ⚠️  [NOT INTEGRATED — expected failures]</td>
+                        <td>TC-SUB-004 (Negative) | should block premium features for a free-tier user</td>
+                        <td class="status-failed">❌ FAILED</td>
+                        <td>1m 17s</td>
+                        <td class="error-cell">Timeout</td>
+                    </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            <p>Pulsify QA Team – Phase 2 Regression Suite – Auto-generated by WDIO HTML Matrix Reporter</p>
+            <p>Report generated at 2026-05-02T14:45:12.022Z</p>
+            <button class="print-btn" onclick="window.print()">🖨️ Print / Export to PDF</button>
+        </div>
+    </div>
+</body>
+</html>

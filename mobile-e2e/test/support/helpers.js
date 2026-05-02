@@ -1,8 +1,8 @@
 const { ancestor, byText, byType } = require('appium-flutter-finder');
 
 const WAIT = {
-    short: 2500,
-    medium: 5000,
+    short: 2000,
+    medium: 4000,
 };
 
 async function tap(locator, waitTimeout = WAIT.medium) {
@@ -13,18 +13,14 @@ async function tap(locator, waitTimeout = WAIT.medium) {
         return;
     } catch (e) {
         lastError = e;
-        if (e.message.includes('Timeout') || e.message.includes('Future not completed')) {
-            await browser.pause(500);
-            try {
-                await browser.execute('flutter:clickElement', locator, { timeout: waitTimeout });
-                return;
-            } catch (retryError) {
-                lastError = retryError;
-            }
-        }
     }
-
-    // Let callers (e.g., tapFirstAvailable) continue with fallback locators.
+    // 1 retry, no pause — fail fast
+    try {
+        await browser.execute('flutter:clickElement', locator, { timeout: waitTimeout });
+        return;
+    } catch (retryError) {
+        lastError = retryError;
+    }
     throw lastError || new Error('Tap failed for locator.');
 }
 
@@ -83,13 +79,12 @@ async function waitForAny(
     while (Date.now() < deadline) {
         for (const locator of locators) {
             try {
-                await browser.execute('flutter:waitFor', locator, Math.min(timeoutPerLocator, 700));
+                await browser.execute('flutter:waitFor', locator, timeoutPerLocator);
                 return locator;
             } catch (error) {
                 lastError = error;
             }
         }
-        await browser.pause(120);
     }
     throw lastError || new Error('None of the expected widgets appeared in time.');
 }
@@ -115,6 +110,25 @@ async function hideKeyboard() {
     }
 }
 
+async function scrollUntilVisible(locator, { maxScrolls = 5, timeout = WAIT.short } = {}) {
+    for (let i = 0; i < maxScrolls; i++) {
+        if (await appears(locator, timeout)) return true;
+        try {
+            await browser.execute('flutter:scroll', byType('ListView'), {
+                dx: 0, dy: -300, durationMilliseconds: 100, frequency: 60,
+            });
+        } catch (_) {
+            try {
+                await browser.execute('flutter:scroll', byType('CustomScrollView'), {
+                    dx: 0, dy: -300, durationMilliseconds: 100, frequency: 60,
+                });
+            } catch (__) { }
+        }
+        await browser.pause(200);
+    }
+    return appears(locator, timeout);
+}
+
 module.exports = {
     WAIT,
     tap,
@@ -125,5 +139,6 @@ module.exports = {
     focusAndEnterText,
     waitForAny,
     appears,
-    hideKeyboard
+    hideKeyboard,
+    scrollUntilVisible
 };
