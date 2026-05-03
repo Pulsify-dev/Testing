@@ -38,7 +38,7 @@ export function playerLocators(page) {
         playingState: page.locator('.hero-play.is-playing'),
         waveform: page.locator('.track-waveform'),
         playbackStateChip: page.locator('[class*="playback-state-chip"]'),
-        playerBar: page.locator('.player-dock-main, .player-dock, .pulsify-player-bar, .player-bar, [class*="player-bar"], [class*="PlayerBar"]'),
+        playerBar: page.locator('.player-dock-main, .player-dock, .pulsify-player-bar, .player-bar, [class*="player-bar"], [class*="PlayerBar"], [aria-label="Playback progress"], button[aria-label="Previous track"], button[aria-label="Pause"], button[aria-label="Play"]').first(),
         historySection: page.locator('.playback-history-section'),
         recentlyPlayedGrid: page.locator('.recently-played-grid'),
         historyFilter: page.locator('.playback-history-filter input, input[placeholder="Filter"]'),

@@ -57,6 +57,7 @@
   "homepage": "https://github.com/Pulsify-dev/Testing#readme",
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@types/node": "^25.5.0"
+    "@types/node": "^25.5.0",
+    "xlsx": "^0.18.5"
   }
 }
