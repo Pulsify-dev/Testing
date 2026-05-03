@@ -1,0 +1,47 @@
+const path = require('path');
+
+exports.config = {
+    runner: 'local',
+    port: 4723,
+    specs: [
+        './test/specs/**/*.spec.js',
+    ],
+    suites: {
+        regression: ['./test/specs/final_qa_regression.spec.js'],
+        megajourney: ['./test/specs/mega-journey.spec.js'],
+        auth: ['./test/specs/final_qa_regression.spec.js'],
+        login: ['./test/specs/final_qa_regression.spec.js'],
+        register: ['./test/specs/final_qa_regression.spec.js'],
+        recovery: ['./test/specs/final_qa_regression.spec.js'],
+        sso: ['./test/specs/final_qa_regression.spec.js'],
+        jwt: ['./test/specs/final_qa_regression.spec.js'],
+        'profile-customization': ['./test/specs/final_qa_regression.spec.js'],
+        'profile-assets': ['./test/specs/final_qa_regression.spec.js'],
+    },
+    maxInstances: 1,
+    capabilities: [{
+        platformName: 'Android',
+        'appium:deviceName': 'emulator-5554',
+        'appium:app': path.resolve(__dirname, '../../Cross/build/app/outputs/flutter-apk/app-debug.apk'),
+        'appium:automationName': 'Flutter',
+        'appium:appPackage': 'com.pulsify.release',
+        'appium:appActivity': 'com.example.cross.MainActivity',
+        'appium:noReset': true,
+        'appium:forceAppLaunch': true,
+        'appium:adbExecTimeout': 60000,
+        'appium:newCommandTimeout': 300,
+        'appium:retryBackoffTime': 500,
+        'appium:maxRetryCount': 10,
+    }],
+    logLevel: 'warn',
+    bail: 0,
+    waitforTimeout: 2000,
+    connectionRetryTimeout: 90000,
+    connectionRetryCount: 1,
+    framework: 'mocha',
+    reporters: ['spec'],
+    mochaOpts: {
+        ui: 'bdd',
+        timeout: 120000,
+    },
+};
