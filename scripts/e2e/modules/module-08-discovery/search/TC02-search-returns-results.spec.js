@@ -12,7 +12,7 @@ test('TC-M8-SRC-02: typing a keyword in search returns results or no-results sta
     const input = locators.searchInput;
     if ((await input.count()) === 0) return;
 
-    await input.fill('test');
+    await input.fill('fein');
     await input.press('Enter');
     await page.waitForTimeout(3000);
 
