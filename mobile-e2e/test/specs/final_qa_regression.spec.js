@@ -701,7 +701,7 @@ describe('Pulsify E2E — Modules 5-13', () => {
 
         it('TC-SRCH-004 | Trending Now section visible on idle search', () => mod.run('TC-SRCH-004', async () => {
             await goSearch();
-            await browser.pause(300);
+            await breakowser.pause(300);
             // Trending may or may not exist — check, but do not fail if absent
             const hasTrending = await appears(byText('Trending Now'), M);
             const hasBar = await appears(byText('Search Pulsify...'), S);
