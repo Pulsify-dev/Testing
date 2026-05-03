@@ -48,7 +48,66 @@
             "privateProfileToggle": "Private Profile"
         },
         "settings": {
-            "signOutBtn": "Sign Out"
+            "signOutBtn": "Sign Out",
+            "logoutBtn": "Logout"
         }
+    },
+    "Home": {
+        "appTitle": "Pulsify",
+        "welcomeText": "Discover New Sounds",
+        "uploadTooltip": "Upload",
+        "activityTooltip": "Activity"
+    },
+    "Feed": {
+        "discoverTab": "Discover",
+        "followingTab": "Following",
+        "noDiscovery": "No tracks found in discovery.",
+        "noFollowing": "No tracks from people you follow."
+    },
+    "Player": {
+        "playPauseKey": "player_play_pause_button",
+        "skipPrevKey": "player_skip_prev_button",
+        "skipNextKey": "player_skip_next_button",
+        "commentBar": "Comment...",
+        "addComment": "Add a comment...",
+        "noComments": "No comments yet. Be the first!"
+    },
+    "Library": {
+        "likedTracks": "Liked Tracks",
+        "listeningHistory": "Listening History",
+        "noLiked": "No liked tracks yet",
+        "noHistory": "No history yet. Start listening!"
+    },
+    "Search": {
+        "searchHint": "Search Pulsify...",
+        "tracksTab": "Tracks",
+        "profilesTab": "Profiles",
+        "playlistsTab": "Playlists",
+        "albumsTab": "Albums",
+        "trendingNow": "Trending Now"
+    },
+    "Messages": {
+        "activityTitle": "Activity",
+        "notificationsTab": "Notifications",
+        "messagesTab": "Messages",
+        "markAllRead": "Mark all as read",
+        "noMessages": "No messages yet."
+    },
+    "Moderation": {
+        "moreTooltip": "More",
+        "suggestedUsers": "Suggested Users",
+        "blockedUsers": "Blocked Users"
+    },
+    "Subscription": {
+        "upgradeTab": "Upgrade",
+        "goPremium": "Go Premium",
+        "comingSoon": "Coming soon"
+    },
+    "Navigation": {
+        "homeTabKey": "nav_home_tab",
+        "searchTabKey": "nav_search_tab",
+        "libraryTabKey": "nav_library_tab",
+        "feedTabKey": "nav_feed_tab",
+        "upgradeTabKey": "nav_upgrade_tab"
     }
 }

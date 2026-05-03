@@ -20,7 +20,8 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
-    "webdriverio": "^9.26.1"
+    "webdriverio": "^9.26.1",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "test": "mocha",
@@ -38,7 +39,17 @@
     "test:profile:assets": "wdio run ./wdio.conf.js --suite profile-assets",
     "test:social": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 3\"",
     "test:upload": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 4\"",
-    "test:megajourney": "wdio run ./wdio.conf.js --suite megajourney"
+    "test:megajourney": "wdio run ./wdio.conf.js --suite megajourney",
+    "test:playback": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 5\"",
+    "test:engagement": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 6\"",
+    "test:library": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 7\"",
+    "test:search": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 8\"",
+    "test:messaging": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 9\"",
+    "test:notifications": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 10\"",
+    "test:moderation": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 11\"",
+    "test:subscription": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js --mochaOpts.grep \"MODULE 1|MODULE 12\"",
+    "test:all": "wdio run ./wdio.conf.js --spec ./test/specs/final_qa_regression.spec.js",
+    "report": "node generate-report.js"
   },
   "keywords": [],
   "author": "",
