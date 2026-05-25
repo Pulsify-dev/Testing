@@ -14,10 +14,6 @@ export const loginDuration = new Trend('login_duration', true);
 export const searchDuration = new Trend('search_duration', true);
 
 export function resolveConfig() {
-
-    // Path is relative to the importing scenario file (k6 currently resolves
-    // open() relative to the entry script). All scenarios live in
-    // ../scripts/stress-tests/scenarios/ → 3 levels up to Testing/, then into stress-tests/.
     const config = JSON.parse(open('../../../stress-tests/k6.config.json'));
 
     const envKey = __ENV.ENV ?? config.defaultEnvironment;

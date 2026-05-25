@@ -148,7 +148,6 @@ export function searchPayload(overrides = {}) {
     };
 }
 
-// ─── Search (GET /v1/search uses query string params) ──────────────────
 export function searchQueryParams(overrides = {}) {
     const q = overrides.q ?? randomItem(SEARCH_TERMS);
     const type = overrides.type ?? randomItem(SEARCH_TYPES);
@@ -160,7 +159,6 @@ export function searchQueryParams(overrides = {}) {
     };
 }
 
-// ─── Feed (GET /v1/feed) ────────────────────────────────────────────────
 export function feedQueryParams(overrides = {}) {
     return {
         qs: {
@@ -171,7 +169,7 @@ export function feedQueryParams(overrides = {}) {
     };
 }
 
-// ─── Discover home (GET /v1/discover) ───────────────────────────────────
+
 export function discoverQueryParams() {
     return {
         qs: { limit: randomIntBetween(10, 30) },
@@ -179,7 +177,7 @@ export function discoverQueryParams() {
     };
 }
 
-// ─── Like a track (POST /v1/tracks/:id/like) ────────────────────────────
+
 export function likePayload() {
     return {
         body: JSON.stringify({
@@ -189,7 +187,6 @@ export function likePayload() {
     };
 }
 
-// ─── Stream URL (GET /v1/tracks/:id/stream-url) ─────────────────────────
 export function streamUrlQueryParams() {
     return {
         qs: {
@@ -200,7 +197,6 @@ export function streamUrlQueryParams() {
     };
 }
 
-// ─── Record play (POST /v1/tracks/:id/play) ─────────────────────────────
 export function recordPlayPayload() {
     return {
         body: JSON.stringify({
@@ -213,7 +209,7 @@ export function recordPlayPayload() {
     };
 }
 
-// ─── Public playlists (GET /v1/playlists/discover/public) ───────────────
+
 export function publicPlaylistsQueryParams() {
     return {
         qs: {
@@ -224,7 +220,6 @@ export function publicPlaylistsQueryParams() {
     };
 }
 
-// ─── Notifications (GET /v1/notifications) ──────────────────────────────
 export function notificationsQueryParams() {
     return {
         qs: { limit: randomIntBetween(10, 30) },
@@ -232,7 +227,6 @@ export function notificationsQueryParams() {
     };
 }
 
-// ─── Test user emails exported for direct use in scenarios ──────────────
 export const TEST_USERS = TEST_USER_EMAILS.map((email) => ({ email, password: TEST_USER_PASSWORD }));
 
 export function logoutPayload(refreshToken) {
